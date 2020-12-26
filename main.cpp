@@ -1,47 +1,64 @@
-#include <iostream>
-#include <string>
+#define _CRT_SECURE_NO_WARNINGS
+#include<iostream>
 using namespace std;
 
-//1、const分配内存 取地址会分配临时内存
-//2、extern 编译器也会给const变量分配内存
+//1、引用基本语法  Type &别名 = 原名
 void test01()
 {
-    const int m_A = 10;
-    int * p = (int*)&m_A; //会分配临时内存
-}
-
-//3、用普通变量初始化 const 的变量
-void test02()
-{
     int a = 10;
-    const int b = a; //会分配内存
+    int &b = a;
 
-    int * p = (int *) &b;
-    *p = 1000;
+    b = 20;
 
+    cout << "a = " << a << endl;
     cout << "b = " << b << endl;
 }
 
-//4、自定义数据类型  加const也会分配内存
-struct Person
+//2、引用必须初始化
+void test02()
 {
-    string m_Name; //姓名
-    int m_Age;
-};
+    //int &a; 必须初始化
+    int a = 10;
+    int &b = a; //引用初始化后不可以修改了
+    int c = 20;
+
+    b = c; //赋值！！！
+    cout << "a = " << a << endl;
+    cout << "b = " << b << endl;
+}
+
+//3、对数组建立引用
 void test03()
 {
-    const Person p1;
-    //p1.m_Name = "aaa";
+    int arr[10];
 
-    Person * p = (Person*)&p1;
-    p->m_Name = "德玛西亚";
-    (*p).m_Age = 18;
+    for (int i = 0; i < 10;i++)
+    {
+        arr[i] = i;
+    }
 
-    cout << "姓名： " << p1.m_Name << " 年龄： " << p1.m_Age << endl;
+    //给数组起别名
+    int(&pArr)[10] = arr;
+    for (int i = 0; i < 10;i++)
+    {
+        cout << pArr[i] << " ";
+    }
+    cout << endl;
+
+    //第二种方式 起别名
+    typedef int(ARRAYREF)[10]; //一个具有10个元素的int类型的数组
+    ARRAYREF & pArr2 = arr;
+
+    for (int i = 0; i < 10; i++)
+    {
+        cout << pArr2[i] << " ";
+    }
+    cout << endl;
 }
 
 int main()
 {
+    //test01();
     //test02();
     test03();
 
