@@ -1,77 +1,47 @@
 #include<iostream>
 using namespace std;
-#include "03_game1.h"
-#include "03_game2.h"
 
-//0、namespace命名空间主要用途 用来解决命名冲突的问题
+namespace KingGlory
+{
+    int sunwukongId = 10;
+}
+
 void test01()
 {
-    LOL::goAtk();
-    KingGlory::goAtk();
+    int sunwukongId = 20;
+
+    //using 声明 注意避免二义性问题
+    //写了using声明后 下面这行代码说明以后看到的sunwukongId 是用KingGlory下的
+    //但是 编译器又有就近原则
+    //二义性
+    //using KingGlory::sunwukongId;
+
+    cout << sunwukongId << endl;
 }
 
-//1、命名空间下 可以放函数、变量、结构体、类
-namespace A
+//using编译指令
+namespace LOL
 {
-    void func();
-    int m_A = 10;
-    struct Person
-    {
-    };
-    class Animal{};
-    namespace B
-    {
-        int m_A = 20;
-    }
+    int sunwukongId = 30;
 }
 
-//2、命名空间必须定义在全局作用域下
-//3、命名空间可以嵌套命名空间
 void test02()
 {
-    cout << "作用域A下的m_A为： " << A::m_A << endl;
-    cout << "作用域B下的m_A为： " << A::B::m_A << endl;
-}
+    int sunwukongId = 20;
+    //using编译指令
+    using namespace KingGlory; //打开王者荣耀房间
+    using namespace LOL;//打开LOL房间
 
-//4、命名空间是开放的，可以随时往原先的命名空间添加内容
-namespace A  //此A命名空间会和上面的命名空间A进行合并
-{
-    int m_B = 1000;
-}
-void test03()
-{
-    cout << "A::下的m_A为" << A::m_A << " , m_B为： " << A::m_B << endl;
-}
-
-//5、无名、匿名命名空间
-namespace
-{
-    int m_C = 0;
-    int m_D = 0;
-}
-//当写了无名命名空间，相当于写了 static int m_C ; static int m_D;
-//只能在当前文件内使用
-
-//6、命名空间可以起别名
-namespace veryLongName
-{
-    int m_A = 0;
-}
-
-void test04()
-{
-    //起别名
-    namespace veryShortName = veryLongName;
-    cout << veryLongName::m_A << endl;
-    cout << veryShortName::m_A << endl;
+    //如果打开多个房间，也要避免二义性问题
+    cout << KingGlory::sunwukongId << endl;
+    cout << sunwukongId << endl;
+    cout << LOL::sunwukongId << endl;
 }
 
 int main()
 {
     //test01();
-    //test02();
-    //test03();
-    test04();
+    test02();
 
     system("pause");
     return EXIT_SUCCESS;
