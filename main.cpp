@@ -1,16 +1,78 @@
-#include <iostream> //标准输入输出流  in输入  out 输出
-//using namespace std;//使用命名空间 std 打开一个叫std房间
+#include<iostream>
+using namespace std;
+#include "03_game1.h"
+#include "03_game2.h"
 
-//函数入口地址
+//0、namespace命名空间主要用途 用来解决命名冲突的问题
+void test01()
+{
+    LOL::goAtk();
+    KingGlory::goAtk();
+}
+
+//1、命名空间下 可以放函数、变量、结构体、类
+namespace A
+{
+    void func();
+    int m_A = 10;
+    struct Person
+    {
+    };
+    class Animal{};
+    namespace B
+    {
+        int m_A = 20;
+    }
+}
+
+//2、命名空间必须定义在全局作用域下
+//3、命名空间可以嵌套命名空间
+void test02()
+{
+    cout << "作用域A下的m_A为： " << A::m_A << endl;
+    cout << "作用域B下的m_A为： " << A::B::m_A << endl;
+}
+
+//4、命名空间是开放的，可以随时往原先的命名空间添加内容
+namespace A  //此A命名空间会和上面的命名空间A进行合并
+{
+    int m_B = 1000;
+}
+void test03()
+{
+    cout << "A::下的m_A为" << A::m_A << " , m_B为： " << A::m_B << endl;
+}
+
+//5、无名、匿名命名空间
+namespace
+{
+    int m_C = 0;
+    int m_D = 0;
+}
+//当写了无名命名空间，相当于写了 static int m_C ; static int m_D;
+//只能在当前文件内使用
+
+//6、命名空间可以起别名
+namespace veryLongName
+{
+    int m_A = 0;
+}
+
+void test04()
+{
+    //起别名
+    namespace veryShortName = veryLongName;
+    cout << veryLongName::m_A << endl;
+    cout << veryShortName::m_A << endl;
+}
+
 int main()
 {
-    // cout 标准的输出
-    // <<  左移运算符
-    // endl 结束换行
-    std::cout << "hello world" << 123456 << std::endl;
+    //test01();
+    //test02();
+    //test03();
+    test04();
 
-
-    system("pause"); //阻塞功能
-    return EXIT_SUCCESS; //返回正常退出
-
+    system("pause");
+    return EXIT_SUCCESS;
 }
