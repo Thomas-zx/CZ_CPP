@@ -1,47 +1,77 @@
-#include<iostream>
-using namespace std;
+#include<stdio.h>
+#include<string.h>
+#include<stdlib.h>
 
-namespace KingGlory
+//1、全局变量检测增强
+//int a;  //没有赋值，当做声明
+//int a = 10; //赋值，当做定义
+/*此代码在c++下编译失败,在c下编译通过*/
+
+//2、函数检测增强
+int getRectS(w, h)
 {
-    int sunwukongId = 10;
 }
-
-void test01()
-{
-    int sunwukongId = 20;
-
-    //using 声明 注意避免二义性问题
-    //写了using声明后 下面这行代码说明以后看到的sunwukongId 是用KingGlory下的
-    //但是 编译器又有就近原则
-    //二义性
-    //using KingGlory::sunwukongId;
-
-    cout << sunwukongId << endl;
-}
-
-//using编译指令
-namespace LOL
-{
-    int sunwukongId = 30;
-}
-
 void test02()
 {
-    int sunwukongId = 20;
-    //using编译指令
-    using namespace KingGlory; //打开王者荣耀房间
-    using namespace LOL;//打开LOL房间
+    getRectS(10, 10, 10);
+}
 
-    //如果打开多个房间，也要避免二义性问题
-    cout << KingGlory::sunwukongId << endl;
-    cout << sunwukongId << endl;
-    cout << LOL::sunwukongId << endl;
+//3、类型转换检测增强
+void test03()
+{
+    char * p = malloc(sizeof(64)); //malloc返回值是void*
+}
+
+//4、struct 增强
+struct Person
+{
+    int m_Age;
+    //void plusAge(); //c语言中struct不可以加函数
+};
+void test04()
+{
+    struct Person p1; //使用时候必须加入struct关键字
+}
+
+//5、 bool类型增强 C语言中没有bool类型
+//bool flag;
+
+//6、三目运算符增强
+void test06()
+{
+    int a = 10;
+    int b = 20;
+
+    printf("ret = %d \n", a > b ? a : b);
+
+    //a > b ? a : b = 100; // 20 = 100 C语言返回的是值
+
+    //C语言中想模仿C++写
+    *(a > b ? &a : &b) = 100;
+    printf("a = %d ,b = %d \n", a, b);
+}
+
+//7、 const增强
+const int m_A = 10; //收到保护，不可以改
+void test07()
+{
+
+    //m_A = 100;
+    const int m_B = 20; //伪常量
+    //m_B = 100;
+
+    int * p = (int *)&m_B;
+    *p = 200;
+    printf("*p = %d , m_B = %d \n", *p, m_B);
+
+    //int arr[m_B]; 不可以初始化数组
+
 }
 
 int main()
 {
-    //test01();
-    test02();
+//	test06();
+    test07();
 
     system("pause");
     return EXIT_SUCCESS;
