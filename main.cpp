@@ -1,39 +1,53 @@
-#include<iostream>
+#include <iostream>
 using namespace std;
 
+// this可以解决命名冲突
 class Person
 {
 public:
-    int m_A; //非静态成员变量，属于对象身上
-    void func( ) {}; //非静态成员函数 不属于对象身上
-    static int m_B; //静态成员变量 ，不属于对象身上
-    static void  func2(){}; //静态成员函数 ，不属于对象身上
-    double m_C; // 12 错误  16正确
+    Person(int age)
+    {
+        this->age = age;
+    }
+
+    //对比年龄
+    void compareAge(Person & p)
+    {
+        if (this->age == p.age )
+        {
+            cout << "年龄相等" << endl;;
+        }
+        else
+        {
+            cout << "年龄不相等" << endl;;
+        }
+    }
+
+    //年龄相加
+    Person& PlusAge(Person & p)
+    {
+        this->age += p.age;
+        return *this; //*this指向对象本体
+    }
+
+    int age;
 };
 
-//结论 ： 非静态成员变量 ，才属于对象身上
 void test01()
 {
-    // 6 、 0 、 4 、 1
-    cout << "sizo of (Person) = " << sizeof(Person) << endl;
-    //空类的大小为 1  每个实例的对象 都有独一无二的地址，char维护这个地址
-    // Person p[10]  p[0] p[1]
-}
+    Person p1(10);
+    cout << "p1的年龄" << p1.age << endl;
 
-void test02()
-{
-    //this指针指向被调用的成员函数所属的对象
-    Person p1;
-    p1.func(); //编译器会偷偷 加入一个 this指针  Person * this
+    Person p2(10);
+    p1.compareAge(p2);
 
-    Person p2;
-    p2.func();
+    p1.PlusAge(p2).PlusAge(p2).PlusAge(p2); //链式编程
+    cout << "p1的年龄" << p1.age << endl;
 }
 
 int main()
 {
-    //test01();
-    test02();
+    test01();
 
     system("pause");
     return EXIT_SUCCESS;
