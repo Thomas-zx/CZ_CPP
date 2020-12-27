@@ -1,85 +1,31 @@
 #include <iostream>
-#include <string>
 using namespace std;
 
-class Phone
+class MyString
 {
 public:
-    Phone()
+    MyString(const char * str)
     {
-        cout << "手机的默认构造函数调用" << endl;
+        //
     }
 
-    Phone(string name)
+    // explicit关键字 ，防止隐式类型转换
+    explicit MyString(int a)
     {
-        cout << "手机的有参构造调用" << endl;
-        m_PhoneName = name;
+        mSize = a;
     }
 
-    ~Phone()
-    {
-        cout << "手机的析构函数调用" << endl;
-    }
-
-    string m_PhoneName;
+    char* mStr;
+    int mSize;
 };
 
-class Game
-{
-public:
-    Game()
-    {
-        cout << "Game的默认构造函数调用" << endl;
-    }
-
-    Game(string name)
-    {
-        cout << "Game的有参构造调用" << endl;
-        m_GameName = name;
-    }
-
-    ~Game()
-    {
-        cout << "Game的析构函数调用" << endl;
-    }
-
-    string m_GameName;
-};
-
-class Person
-{
-public:
-    Person()
-    {
-        cout << "Person的默认构造函数调用" << endl;
-    }
-
-    Person(string name, string phoneName, string gameName) : m_Name(name), m_Phone(phoneName), m_Game(gameName)
-    {
-        cout << "Person的有参构造调用" << endl;
-        //m_Name = name;
-    }
-
-    void playGame()
-    {
-        cout << m_Name << " 拿着《" << m_Phone.m_PhoneName << "》牌手机 ，玩着《" << m_Game.m_GameName << "》游戏" << endl;
-    }
-
-    ~Person()
-    {
-        cout << "Person的析构函数调用" << endl;
-    }
-
-    string m_Name; //姓名
-    Phone m_Phone; //手机
-    Game m_Game; //游戏
-};
-
-//类对象作为类成员时候，构造顺序先将类对象一一构造，然后构造自己， 析构的顺序是相反的
 void test01()
 {
-    Person p("狗蛋","苹果","切水果");
-    p.playGame();
+
+    MyString str = "abc";
+    MyString str2(10);
+    //MyString str3 = 10;   //做什么用途？ str2字符串为 "10" 字符串的长度10
+    //隐式类型转换  Mystring str3 = Mystring (10);
 }
 
 int main()
