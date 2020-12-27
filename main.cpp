@@ -1,72 +1,46 @@
-#include<iostream>
+#include <iostream>
+#include <string>
 using namespace std;
 
-//创建主席类
-//需求 单例模式  为了创建类中的对象，并且保证只有一个对象实例
-class ChairMan
+class Printer
 {
 private:
-    //1.构造函数 进行私有化
-    ChairMan()
-    {
-        //cout << "创建国家主席" << endl;
-    }
+    static Printer *singlePrinter;
+    int m_Count;
 
-    //2.拷贝构造 私有化
-    ChairMan(const ChairMan&c)
-    {}
+    Printer() {  m_Count = 0; }
+    Printer(const Printer& p);
 
 public:
-    //3.提供 get方法 访问 主席
-    static ChairMan* getInstance()
+    static Printer* getInstance()
     {
-        return singleMan;
+        return singlePrinter;
     }
 
-private:
-    //0.静态成员
-    static ChairMan * singleMan;
+    void printText(string text)
+    {
+        cout << text <<endl;
+        m_Count++;
+        cout << "打印机使用的次数为：" << m_Count << endl;
+    }
 };
-//4.
-ChairMan * ChairMan::singleMan = new ChairMan;
+
+Printer* Printer::singlePrinter = new Printer;
 
 void test01()
 {
-    /*ChairMan c1;*/
+    //拿到打印机
+    Printer * printer =  Printer::getInstance();
 
-    /*ChairMan * c2 = new ChairMan;
-    ChairMan * c3 = new ChairMan;*/
-
-    /*ChairMan * cm = ChairMan::singleMan;
-    ChairMan * cm2 = ChairMan::singleMan;*/
-
-    //ChairMan::singleMan = NULL;
-
-    ChairMan * cm1 = ChairMan::getInstance();
-    ChairMan * cm2 = ChairMan::getInstance();
-    if (cm1 == cm2)
-    {
-        cout << "cm1 与 cm2相同" << endl;
-    }
-    else
-    {
-        cout << "cm1 与 cm2不相同" << endl;
-    }
-
-    /*ChairMan * cm3 = new ChairMan(*cm2);
-    if (cm3 == cm2)
-    {
-    cout << "cm3 与 cm2相同" << endl;
-    }
-    else
-    {
-    cout << "cm3 与 cm2不相同" << endl;
-    }*/
+    printer->printText("离职报告");
+    printer->printText("入职报告");
+    printer->printText("加薪申请");
+    printer->printText("升级申请");
+    printer->printText("退休申请");
 }
 
 int main()
 {
-    //cout << "main调用" << endl; 主席创建先于main调用
     test01();
 
     system("pause");
