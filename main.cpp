@@ -1,48 +1,31 @@
 #include <iostream>
 using namespace std;
 
-// this可以解决命名冲突
 class Person
 {
 public:
-    Person(int age)
+    void show()
     {
-        this->age = age;
+        cout << "Person show" << endl;
     }
 
-    //对比年龄
-    void compareAge(Person & p)
+    void showAge()
     {
-        if (this->age == p.age )
+        if (this == NULL)
         {
-            cout << "年龄相等" << endl;;
+            return;
         }
-        else
-        {
-            cout << "年龄不相等" << endl;;
-        }
+        cout << this->m_Age << endl; // NULL -> m_Age
     }
 
-    //年龄相加
-    Person& PlusAge(Person & p)
-    {
-        this->age += p.age;
-        return *this; //*this指向对象本体
-    }
-
-    int age;
+    int m_Age; //
 };
 
 void test01()
 {
-    Person p1(10);
-    cout << "p1的年龄" << p1.age << endl;
-
-    Person p2(10);
-    p1.compareAge(p2);
-
-    p1.PlusAge(p2).PlusAge(p2).PlusAge(p2); //链式编程
-    cout << "p1的年龄" << p1.age << endl;
+    Person * p = NULL;
+    p->show();
+    p->showAge();
 }
 
 int main()
