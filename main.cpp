@@ -1,44 +1,42 @@
-#define _CRT_SECURE_NO_WARNINGS
 #include<iostream>
-
 using namespace std;
 
-//定义一个加法
-#define  MyAdd(x,y) ((x)+(y))
+//函数的默认参数 参数后面 = ...
+//函数参数注意事项，如果有一个位置有了默认参数，那么从这个位置开始，从左往后都必须有默认参数
+// 传入参数 ，如果有参数，就用传入的参数，没有参数就用默认值
+
+//如果函数声明里面有了默认参数，那么函数实现时候必须没有
+// 函数声明和实现里 只能有一个里有默认参数，不要同时都出现默认参数
+void myFunc(int a = 10, int b = 10);
+void myFunc(int a , int b ){ }
+
+void func( int a , int b = 10,int c = 1 )
+{
+    cout << "a + b + c = " << a + b + c << endl;
+}
 
 void test01()
 {
-    int ret = MyAdd(10, 20) *20; //预期结果 600 ((10)+(20))*20
+    //func();
+    func(1,2);
 
-    cout << "ret = " << ret << endl;
 }
 
-#define MyCompare(a,b)  ((a) < (b)) ? (a) :(b)
-
-inline void mycompare(int a, int b)
+//函数 占位参数
+//如果有了占位参数，函数调用时候必须要提供这个参数 ,但是用不到参数
+//占位参数 没有什么大用途，只有后面重载 ++符号才有一点点用
+//占位参数 可以有默认值
+void func2(int a , int = 1)
 {
-    int ret = a < b ? a : b;
-    cout << "ret :::::  " << ret << endl;
+    cout << "fun a=" << a << endl;
 }
-
-//1.内联函数注意事项
-// 类内部的成员函数 默认前面会加inline关键字
-inline void func(); //内联函数声明
-inline void func() { }; //如果函数实现时候，没有加inline关键字 ，那么这个函数依然不算内联函数
 
 void test02()
 {
-    int a = 10;
-    int b = 20;
-
-    //int ret =  MyCompare(++a, b); // 预期结果 11    ((++a) < (b)) ? (++a):(b)
-
-    //cout << "ret = " << ret << endl;
-
-    mycompare(++a, b);
+    func2(10);
 }
 
-//3 宏函数也没有作用域
+//C语言中没有默认参数,C也没有 占位参数
 int main()
 {
     //test01();
