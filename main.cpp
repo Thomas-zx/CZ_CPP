@@ -1,76 +1,72 @@
 #include<iostream>
 using namespace std;
 
-class Person
+//创建主席类
+//需求 单例模式  为了创建类中的对象，并且保证只有一个对象实例
+class ChairMan
 {
-public:
-    Person()
-    {
-        //m_Age = 10;
-    }
-
-    static int m_Age; //加入static就是 静态成员变量 ，会共享数据
-    //静态成员变量，在类内声明，类外进行初始化
-    //静态成员变量 也是有权限的
-
-    int m_A;
-
-    //静态成员函数
-    //不可以访问 普通成员变量
-    //可以访问 静态成员变量
-    static void func()
-    {
-        //m_A = 10;
-        m_Age = 100;
-        cout << "func调用" << endl;
-    };
-
-    //普通成员函数 可以访问普通成员变量，也可以访问静态成员变量
-    void myFunc()
-    {
-        m_A = 100;
-        m_Age = 100;
-    }
 private:
-    static int m_other; //私有权限 在类外不能访问
-
-    static void func2()
+    //1.构造函数 进行私有化
+    ChairMan()
     {
-        cout << "func2调用" << endl;
+        //cout << "创建国家主席" << endl;
     }
-};
 
-int  Person::m_Age = 0; //类外初始化实现
-int  Person::m_other = 10;
+    //2.拷贝构造 私有化
+    ChairMan(const ChairMan&c)
+    {}
+
+public:
+    //3.提供 get方法 访问 主席
+    static ChairMan* getInstance()
+    {
+        return singleMan;
+    }
+
+private:
+    //0.静态成员
+    static ChairMan * singleMan;
+};
+//4.
+ChairMan * ChairMan::singleMan = new ChairMan;
 
 void test01()
 {
-    //1 通过对象访问属性
-    Person p1;
-    p1.m_Age = 10;
+    /*ChairMan c1;*/
 
-    Person p2;
-    p2.m_Age = 20;
+    /*ChairMan * c2 = new ChairMan;
+    ChairMan * c3 = new ChairMan;*/
 
-    cout << "p1 = " << p1.m_Age << endl; //10 或者 20？ 20
-    cout << "p2 = " << p2.m_Age << endl; //20
-    //共享数据
+    /*ChairMan * cm = ChairMan::singleMan;
+    ChairMan * cm2 = ChairMan::singleMan;*/
 
-    //2 通过类名访问属性
-    cout << "通过类名访问Age = " << Person::m_Age << endl;
-    //cout << "other = " << Person::m_other << endl; //私有权限在类外无法访问
+    //ChairMan::singleMan = NULL;
 
-    //静态成员函数调用
-    p1.func();
-    p2.func();
-    Person::func();
+    ChairMan * cm1 = ChairMan::getInstance();
+    ChairMan * cm2 = ChairMan::getInstance();
+    if (cm1 == cm2)
+    {
+        cout << "cm1 与 cm2相同" << endl;
+    }
+    else
+    {
+        cout << "cm1 与 cm2不相同" << endl;
+    }
 
-    //静态成员函数 也是有权限的
-    //Person::func2();
+    /*ChairMan * cm3 = new ChairMan(*cm2);
+    if (cm3 == cm2)
+    {
+    cout << "cm3 与 cm2相同" << endl;
+    }
+    else
+    {
+    cout << "cm3 与 cm2不相同" << endl;
+    }*/
 }
 
 int main()
 {
+    //cout << "main调用" << endl; 主席创建先于main调用
     test01();
 
     system("pause");
