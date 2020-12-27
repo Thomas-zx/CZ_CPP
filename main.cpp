@@ -1,43 +1,85 @@
-#include<iostream>
+#include <iostream>
+#include <string>
 using namespace std;
+
+class Phone
+{
+public:
+    Phone()
+    {
+        cout << "手机的默认构造函数调用" << endl;
+    }
+
+    Phone(string name)
+    {
+        cout << "手机的有参构造调用" << endl;
+        m_PhoneName = name;
+    }
+
+    ~Phone()
+    {
+        cout << "手机的析构函数调用" << endl;
+    }
+
+    string m_PhoneName;
+};
+
+class Game
+{
+public:
+    Game()
+    {
+        cout << "Game的默认构造函数调用" << endl;
+    }
+
+    Game(string name)
+    {
+        cout << "Game的有参构造调用" << endl;
+        m_GameName = name;
+    }
+
+    ~Game()
+    {
+        cout << "Game的析构函数调用" << endl;
+    }
+
+    string m_GameName;
+};
 
 class Person
 {
 public:
-    //有参构造初始化数据
-    /*Person(int a, int b, int c)
+    Person()
     {
-        m_A = a;
-        m_B = b;
-        m_C = c;
-    }*/
+        cout << "Person的默认构造函数调用" << endl;
+    }
 
-    Person() :m_A(10), m_B(20), m_C(30)
-    {}
+    Person(string name, string phoneName, string gameName) : m_Name(name), m_Phone(phoneName), m_Game(gameName)
+    {
+        cout << "Person的有参构造调用" << endl;
+        //m_Name = name;
+    }
 
-    //利用初始化列表 初始化数据
-    // 构造函数后面  +  : 属性（参数）, 属性（参数）...
-    Person(int a, int b, int c) : m_A(a), m_B(b), m_C(c)
-    {}
+    void playGame()
+    {
+        cout << m_Name << " 拿着《" << m_Phone.m_PhoneName << "》牌手机 ，玩着《" << m_Game.m_GameName << "》游戏" << endl;
+    }
 
-    int m_A;
-    int m_B;
-    int m_C;
+    ~Person()
+    {
+        cout << "Person的析构函数调用" << endl;
+    }
+
+    string m_Name; //姓名
+    Phone m_Phone; //手机
+    Game m_Game; //游戏
 };
 
+//类对象作为类成员时候，构造顺序先将类对象一一构造，然后构造自己， 析构的顺序是相反的
 void test01()
 {
-    Person p1(10, 20, 30);
-
-    cout << "p1的m_A :" << p1.m_A << endl;
-    cout << "p1的m_B :" << p1.m_B << endl;
-    cout << "p1的m_C :" << p1.m_C << endl;
-
-    Person p2;
-    cout << "p2的m_A :" << p2.m_A << endl;
-    cout << "p2的m_B :" << p2.m_B << endl;
-    cout << "p2的m_C :" << p2.m_C << endl;
-
+    Person p("狗蛋","苹果","切水果");
+    p.playGame();
 }
 
 int main()
