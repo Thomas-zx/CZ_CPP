@@ -4,46 +4,40 @@ using namespace std;
 class Person
 {
 public:
-    Person()
+    //有参构造初始化数据
+    /*Person(int a, int b, int c)
+    {
+        m_A = a;
+        m_B = b;
+        m_C = c;
+    }*/
+
+    Person() :m_A(10), m_B(20), m_C(30)
     {}
-    //初始化属性
-    Person(char * name,int age)
-    {
-        m_Name = (char*)malloc(strlen(name) + 1);
-        strcpy(m_Name, name);
 
-        m_age = age;
-    }
-    //拷贝构造 系统会提供默认拷贝构造，而且是简单的值拷贝
-    //自己提供拷贝构造，原因简单的浅拷贝会释放堆区空间两次，导致挂掉
-    //深拷贝
-    Person(const Person&p)
-    {
-        m_age = p.m_age;
-        m_Name = (char*)malloc(strlen(p.m_Name) + 1);
-        strcpy(m_Name, p.m_Name);
-    }
+    //利用初始化列表 初始化数据
+    // 构造函数后面  +  : 属性（参数）, 属性（参数）...
+    Person(int a, int b, int c) : m_A(a), m_B(b), m_C(c)
+    {}
 
-    ~Person()
-    {
-        cout << "析构函数调用" << endl;
-        if (m_Name != NULL)
-        {
-            free(m_Name);
-            m_Name = NULL;
-        }
-    }
-
-    //姓名
-    char * m_Name;
-    //年龄
-    int m_age;
+    int m_A;
+    int m_B;
+    int m_C;
 };
 
 void test01()
 {
-    Person p1("敌法",10);
-    Person p2(p1); //调用拷贝构造
+    Person p1(10, 20, 30);
+
+    cout << "p1的m_A :" << p1.m_A << endl;
+    cout << "p1的m_B :" << p1.m_B << endl;
+    cout << "p1的m_C :" << p1.m_C << endl;
+
+    Person p2;
+    cout << "p2的m_A :" << p2.m_A << endl;
+    cout << "p2的m_B :" << p2.m_B << endl;
+    cout << "p2的m_C :" << p2.m_C << endl;
+
 }
 
 int main()
