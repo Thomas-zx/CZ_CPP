@@ -1,46 +1,90 @@
 #include<iostream>
 using namespace std;
 
-//函数的默认参数 参数后面 = ...
-//函数参数注意事项，如果有一个位置有了默认参数，那么从这个位置开始，从左往后都必须有默认参数
-// 传入参数 ，如果有参数，就用传入的参数，没有参数就用默认值
-
-//如果函数声明里面有了默认参数，那么函数实现时候必须没有
-// 函数声明和实现里 只能有一个里有默认参数，不要同时都出现默认参数
-void myFunc(int a = 10, int b = 10);
-void myFunc(int a , int b ){ }
-
-void func( int a , int b = 10,int c = 1 )
+//函数重载
+// C++中 函数名称可以重复
+// 必须在同一个作用域,函数名称相同
+// 函数的参数 个数不同 或者 类型不同  或者 顺序不同
+void func()
 {
-    cout << "a + b + c = " << a + b + c << endl;
+    cout << "无参数的func" << endl;
 }
+
+void func(int a)
+{
+    cout << "有参数的func(int a)" << endl;
+}
+
+void func(double  a)
+{
+    cout << "有参数的func(double a)" << endl;
+}
+
+void func(double  a , int b)
+{
+    cout << "有参数的func(double a ,int b)" << endl;
+}
+
+void func(int a, double b)
+{
+    cout << "有参数的func(int a ,double b)" << endl;
+}
+
+//返回值可以作为函数重载的条件吗? 不可以
+//int func(int a, double b)
+//{
+//	cout << "有参数的func(int a ,double b)" << endl;
+//	return 1;
+//}
 
 void test01()
 {
-    //func();
-    func(1,2);
-
+    func();
+    func(1);
+    func(3.14);
+    func(1.1,3);
+    func(1, 3.14);
 }
 
-//函数 占位参数
-//如果有了占位参数，函数调用时候必须要提供这个参数 ,但是用不到参数
-//占位参数 没有什么大用途，只有后面重载 ++符号才有一点点用
-//占位参数 可以有默认值
-void func2(int a , int = 1)
+
+//当函数重载 碰到了 默认参数时候，要注意避免二义性问题
+void func2(int a,int b = 10)
 {
-    cout << "fun a=" << a << endl;
+
+}
+void func2(int a)
+{
+
 }
 
 void test02()
 {
-    func2(10);
+    //func2(10);
 }
 
-//C语言中没有默认参数,C也没有 占位参数
+//引用的重载版本
+void func3(int &a) //引用必须要引合法的内存空间
+{
+    cout << " int &a" << endl;
+}
+
+void func3(const int &a)  //const也是可以作为重载的条件  int tmp = 10; const int &a = tmp;
+{
+    cout << "const int &a" << endl;
+}
+
+void test03()
+{
+    int a = 10;
+
+    func3(a);
+    func3(10);
+}
+
 int main()
 {
     //test01();
-    test02();
+    test03();
 
     system("pause");
     return EXIT_SUCCESS;
