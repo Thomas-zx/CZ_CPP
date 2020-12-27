@@ -1,16 +1,54 @@
-#include<iostream>
-using namespace std;
-#include "17_test.h"
+#include<stdio.h>
+#include<string.h>
+#include<stdlib.h>
 
-//C++中想调用C语言方法
+struct Person
+{
+    char mName[64];
+    int mAge;
+};
 
-//extern "C" void show(); //show方法 按照C语言方式做连接
-//解决的问题就是 在C++中调用C语言的函数
+void PersonEat(struct Person *p)
+{
+    printf("%s 在吃人饭 \n",p->mName);
+}
+
+void test01()
+{
+    struct Person p1;
+    strcpy(p1.mName, "德玛西亚");
+
+    PersonEat(&p1);
+}
+
+struct Dog
+{
+    char mName[64];
+    int mAge;
+};
+
+void DogEat(struct Dog * dog)
+{
+    printf("%s 在吃狗粮 \n", dog->mName);
+}
+
+void test02()
+{
+    struct Dog d;
+    strcpy(d.mName, "旺财");
+    DogEat(&d);
+
+    struct Person p1;
+    strcpy(p1.mName, "老王");
+    //DogEat(&p1);
+
+}
+//C语言封装 属性和行为分开处理了 ,类型检测不够
 
 int main()
 {
-    show(); //在C++中 函数是可以发生重载的，编译器会把这个函数名称偷偷改变  _showv  void
-
+    //test01();
+    test02();
     system("pause");
     return EXIT_SUCCESS;
 }
