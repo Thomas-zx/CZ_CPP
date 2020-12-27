@@ -6,57 +6,72 @@ class Person
 public:
     Person()
     {
-        cout << "默认构造调用" << endl;
+        //m_Age = 10;
     }
 
-    Person(int a)
-    {
-        cout << "有参构造调用" << endl;
-    }
+    static int m_Age; //加入static就是 静态成员变量 ，会共享数据
+    //静态成员变量，在类内声明，类外进行初始化
+    //静态成员变量 也是有权限的
 
-    ~Person()
+    int m_A;
+
+    //静态成员函数
+    //不可以访问 普通成员变量
+    //可以访问 静态成员变量
+    static void func()
     {
-        cout << "析构函数调用" << endl;
+        //m_A = 10;
+        m_Age = 100;
+        cout << "func调用" << endl;
+    };
+
+    //普通成员函数 可以访问普通成员变量，也可以访问静态成员变量
+    void myFunc()
+    {
+        m_A = 100;
+        m_Age = 100;
+    }
+private:
+    static int m_other; //私有权限 在类外不能访问
+
+    static void func2()
+    {
+        cout << "func2调用" << endl;
     }
 };
 
+int  Person::m_Age = 0; //类外初始化实现
+int  Person::m_other = 10;
+
 void test01()
 {
-    //Person p1;  栈区开辟
-    Person * p2 = new Person; //堆区开辟
+    //1 通过对象访问属性
+    Person p1;
+    p1.m_Age = 10;
 
-    //所有new出来的对象 都会返回该类型的指针
-    //malloc 返回 void* 还要强转
-    //malloc会调用构造吗？ 不会  new会调用构造
-    // new 运算符  malloc 函数
-    //释放 堆区空间
-    // delete也是运算符 配合 new用  malloc 配合 free用
-    delete p2;
-}
+    Person p2;
+    p2.m_Age = 20;
 
-void test02()
-{
-    void *p = new Person(10);
-    //当用void* 接受new出来的指针 ，会出现释放的问题
-    delete p;
-    //无法释放p ，所以避免这种写法
-}
+    cout << "p1 = " << p1.m_Age << endl; //10 或者 20？ 20
+    cout << "p2 = " << p2.m_Age << endl; //20
+    //共享数据
 
-void test03()
-{
-    //通过new开辟数组 一定会调用默认构造函数,所以一定要提供默认构造
-    Person * pArray = new Person[10];
-    //Person pArray2[2] = { Person(1), Person(2) }; //在栈上开辟数组，可以指定有参构造
-    
-    //释放数组 delete []
-    delete [] pArray;
+    //2 通过类名访问属性
+    cout << "通过类名访问Age = " << Person::m_Age << endl;
+    //cout << "other = " << Person::m_other << endl; //私有权限在类外无法访问
+
+    //静态成员函数调用
+    p1.func();
+    p2.func();
+    Person::func();
+
+    //静态成员函数 也是有权限的
+    //Person::func2();
 }
 
 int main()
 {
-    //test01();
-    //test02();
-    test03();
+    test01();
 
     system("pause");
     return EXIT_SUCCESS;
