@@ -2,37 +2,50 @@
 #include <string>
 using namespace std;
 
+class Building;
+class goodGay
+{
+public:
+    goodGay();
+
+    void visit();
+private:
+    Building * building;
+};
+
 class Building
 {
-    //让全局的好基友函数 变为我的好朋友  友元函数
-    friend void  goodGay(Building * building);
+    //让好基友类 作为 Building的好朋友
+    friend class goodGay;
 public:
-    Building()
-    {
-        this->m_SittingRoom = "客厅";
-        this->m_BedRoom = "卧室";
-    }
-
-    //客厅  卧室
+    Building();
 public:
     string m_SittingRoom; //客厅
-
 private:
     string m_BedRoom; //卧室
 };
 
-//全局函数  好基友
-void goodGay(Building * building)
+goodGay::goodGay()
 {
-    cout << "好基友正在访问 " << building->m_SittingRoom << endl;
-    cout << "好基友正在访问 " << building->m_BedRoom << endl;
+    building = new Building;
 }
 
-//友元函数 目的访问类中的私有成员属性
+void goodGay::visit()
+{
+    cout << "好基友正在访问： " << this->building->m_SittingRoom << endl;
+    cout << "好基友正在访问： " << this->building->m_BedRoom << endl;
+}
+
+Building::Building()
+{
+    this->m_SittingRoom = "客厅";
+    this->m_BedRoom = "卧室";
+}
+
 void test01()
 {
-    Building * building = new Building;
-    goodGay(building);
+    goodGay gg;
+    gg.visit();
 }
 
 int main()
