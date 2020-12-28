@@ -1,8 +1,11 @@
+//
+// Created by 张兴 on 2020-12-28.
+//
+
 #include <iostream>
 #include <string>
 using namespace std;
 
-//只让 visit可以作Building的好朋友  visit2 不可以访问私有属性
 class Building;
 class goodGay
 {
@@ -10,16 +13,14 @@ public:
     goodGay();
 
     void visit();
-    void visit2();
 private:
     Building * building;
 };
 
 class Building
 {
-    //让成员函数 visit作为友元函数
-    friend void goodGay::visit();
-
+    //让好基友类 作为 Building的好朋友
+    friend class goodGay;
 public:
     Building();
 public:
@@ -39,12 +40,6 @@ void goodGay::visit()
     cout << "好基友正在访问： " << this->building->m_BedRoom << endl;
 }
 
-void goodGay::visit2()
-{
-    cout << "好基友正在访问： " << this->building->m_SittingRoom << endl;
-    //cout << "好基友正在访问： " << this->building->m_BedRoom << endl;
-}
-
 Building::Building()
 {
     this->m_SittingRoom = "客厅";
@@ -55,7 +50,6 @@ void test01()
 {
     goodGay gg;
     gg.visit();
-    gg.visit2();
 }
 
 int main()
