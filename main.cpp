@@ -1,47 +1,38 @@
-#include<iostream>
+#include <iostream>
+#include <string>
 using namespace std;
 
-class Person
+class Building
 {
-public :
-    Person()
+    //让全局的好基友函数 变为我的好朋友  友元函数
+    friend void  goodGay(Building * building);
+public:
+    Building()
     {
-        //构造中修改属性
-        //this 永远执行本体
-        this->m_A = 0;
-        this->m_B = 0;
+        this->m_SittingRoom = "客厅";
+        this->m_BedRoom = "卧室";
     }
 
-    void showInfo() const //常函数 不允许修改指针指向的值
-    {
-        //this->m_A = 1000;
-        this->m_B = 1000;
-        // const Person * const this
-        cout << "m_A = " << this->m_A << endl;
-        cout << "m_B = " << this->m_B << endl;
-    }
+    //客厅  卧室
+public:
+    string m_SittingRoom; //客厅
 
-    void show2() const
-    {
-        //m_A = 100;
-    }
-
-    int m_A;
-    mutable int m_B; //就算是常函数 我还是执意要修改
+private:
+    string m_BedRoom; //卧室
 };
 
+//全局函数  好基友
+void goodGay(Building * building)
+{
+    cout << "好基友正在访问 " << building->m_SittingRoom << endl;
+    cout << "好基友正在访问 " << building->m_BedRoom << endl;
+}
+
+//友元函数 目的访问类中的私有成员属性
 void test01()
 {
-
-    Person p1;
-    p1.showInfo();
-
-    //常对象 不允许修改属性
-    const  Person p2;
-    cout << p2.m_A << endl;
-    p2.show2();
-    //常对象 不可以调用普通成员函数
-    //常对象 可以调用常函数
+    Building * building = new Building;
+    goodGay(building);
 }
 
 int main()
