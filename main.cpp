@@ -2,82 +2,43 @@
 #include <string>
 using namespace std;
 
-// ==运算符重载
-class Person
+// ()重载
+class MyPrint
 {
 public:
-    Person(string name, int age)
+    void operator()( string text)
     {
-        this->m_Name = name;
-        this->m_Age = age;
+        cout << text << endl;
     }
-
-    bool operator==( Person & p)
-    {
-        if (this->m_Name == p.m_Name && this->m_Age == p.m_Age)
-        {
-            return true;
-        }
-        return false;
-    }
-
-    bool operator!=( Person & p)
-    {
-        if (this->m_Name == p.m_Name && this->m_Age == p.m_Age)
-        {
-            return false;
-        }
-        return true;
-    }
-
-public:
-    string m_Name;
-    int m_Age;
 };
 
 void test01()
 {
-    Person p1("小明", 10);
-    Person p2("小强", 15);
-    Person p3("小强", 15);
-    //int a = 10;
-    //int b = 10;
-    //if (a == b )
-    //{
-    //	cout << "a b相等" << endl;
-    //}
+    MyPrint myPrint;
+    myPrint("hello world 1111");    //仿函数
+}
 
-    if ( p1 == p2)
+class MyAdd
+{
+public:
+    int operator()(int v1,int v2)
     {
-        cout << "p1 和 p2 相等" << endl;
+        return v1 + v2;
     }
-    else
-    {
-        cout << "p1 和 p2 不相等" << endl;
-    }
+};
 
-    if (p2 == p3)
-    {
-        cout << "p2 和 p3 相等" << endl;
-    }
-    else
-    {
-        cout << "p2 和 p3 不相等" << endl;
-    }
+void test02()
+{
+    //MyAdd myAdd;
+    //cout << myAdd(1, 1) << endl;
 
-    if (p1 != p2)
-    {
-        cout << "p1 和 p2 不相等" << endl;
-    }
-    else
-    {
-        cout << "p1 和 p2 相等" << endl;
-    }
+    cout << MyAdd()(1, 1) << endl; //匿名对象
 }
 
 int main()
 {
-    test01();
+    //test01();
+    test02();
 
     system("pause");
     return EXIT_SUCCESS;
