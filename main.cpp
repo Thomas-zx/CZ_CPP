@@ -1,87 +1,83 @@
-#include<iostream>
+#include <iostream>
+#include <string>
 using namespace std;
 
-//一个类默认创建 默认构造、析构、拷贝构造 operator=赋值运算符 进行简单的值传递
+// ==运算符重载
 class Person
 {
 public:
-    Person(int a)
+    Person(string name, int age)
     {
-        this->m_A = a;
+        this->m_Name = name;
+        this->m_Age = age;
     }
 
-    int m_A;
+    bool operator==( Person & p)
+    {
+        if (this->m_Name == p.m_Name && this->m_Age == p.m_Age)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    bool operator!=( Person & p)
+    {
+        if (this->m_Name == p.m_Name && this->m_Age == p.m_Age)
+        {
+            return false;
+        }
+        return true;
+    }
+
+public:
+    string m_Name;
+    int m_Age;
 };
 
 void test01()
 {
-    Person p1(10);
-    Person p2(0);
-
-    p2 = p1; //赋值
-
-    cout << "p2的m_A=" << p2.m_A <<endl;
-}
-
-class Person2
-{
-public:
-    Person2(char * name)
-    {
-        this->pName = new char[strlen(name) + 1];
-        strcpy(this->pName, name);
-    }
-
-    //重载 = 赋值运算符
-    Person2& operator= ( const Person2 & p)
-    {
-        //判断如果原来已经堆区有内容，先释放
-        if (this->pName != NULL)
-        {
-            delete[] this->pName;
-            this->pName = NULL;
-        }
-
-        this->pName = new char[strlen(p.pName) + 1];
-        strcpy(this->pName, p.pName);
-
-        return *this;
-    }
-
-    ~Person2()
-    {
-        if (this->pName != NULL)
-        {
-            delete[] this->pName;
-            this->pName = NULL;
-        }
-    }
-
-    char * pName;
-};
-
-void test02()
-{
-    Person2 p1("狗蛋");
-    Person2 p2("狗剩");
-    Person2 p3("");
-    p3 = p2 = p1;
-
-    cout << p1.pName << endl;
-    cout << p2.pName << endl;
-    cout << p3.pName << endl;
-
+    Person p1("小明", 10);
+    Person p2("小强", 15);
+    Person p3("小强", 15);
     //int a = 10;
-    //int b = 20;
-    //int c;
-    //c = a = b; //都是20
-    //cout << a << " " << b << " " << c << endl;
+    //int b = 10;
+    //if (a == b )
+    //{
+    //	cout << "a b相等" << endl;
+    //}
+
+    if ( p1 == p2)
+    {
+        cout << "p1 和 p2 相等" << endl;
+    }
+    else
+    {
+        cout << "p1 和 p2 不相等" << endl;
+    }
+
+    if (p2 == p3)
+    {
+        cout << "p2 和 p3 相等" << endl;
+    }
+    else
+    {
+        cout << "p2 和 p3 不相等" << endl;
+    }
+
+    if (p1 != p2)
+    {
+        cout << "p1 和 p2 不相等" << endl;
+    }
+    else
+    {
+        cout << "p1 和 p2 相等" << endl;
+    }
 }
 
 int main()
 {
-    //test01();
-    test02();
+    test01();
 
     system("pause");
     return EXIT_SUCCESS;
