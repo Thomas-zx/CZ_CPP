@@ -4,29 +4,70 @@ using namespace std;
 class Base
 {
 public:
-    int m_A;
-protected:
-    int m_B;
-private:
-    int m_C;
-};
+    Base()
+    {
+        m_A = 10;
+        cout << "Base默认构造函数调用" << endl;
+    }
+    ~Base()
+    {
+        cout << "Base的析构函数调用" << endl;
+    }
 
-//子类中 会继承父类的私有成员，只是被编译给隐藏起来，访问不到私有成员
-class Son :public Base
+    int m_A;
+};
+// 子类会继承父类的成员属性，成员函数
+//但是 子类 不会继承 父类 构造函数 和 析构函数
+//只有父类自己知道，如果构造和析构自己的属性，而子类不知道
+
+class Son : public Base
 {
 public:
-    int m_D;
+    Son()
+    {
+        cout << "Son默认构造函数调用" << endl;
+    }
+    ~Son()
+    {
+        cout << "Son的析构函数调用" << endl;
+    }
 };
 
 void test01()
 {
-    cout << sizeof(Base) << endl;
-    cout << sizeof(Son) << endl;
+    //Base b1;
+    Son s1;
+}
+
+class Base2
+{
+public:
+    Base2(int a)
+    {
+        this->m_A = a;
+        cout << "Base2有参构造函数调用" << endl;
+    }
+    int m_A;
+};
+
+class Son2 : public Base2
+{
+public:
+    Son2(int a ) : Base2(a)//利用初始化列表方式 显示调用 有参构造
+    {
+        cout << "Son2有参构造函数调用" << endl;
+    }
+};
+
+void test02()
+{
+    Son2 s2(1000);
 }
 
 int main()
 {
     test01();
+    test02();
 
     system("pause");
     return EXIT_SUCCESS;
