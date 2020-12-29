@@ -1,53 +1,63 @@
-#include<iostream>
+#include <iostream>
 using namespace std;
 
-class Base1
+class Animal
 {
 public:
-    Base1()
-    {
-        m_A = 10;
-    }
-public:
-    int m_A;
+    int m_Age;
 };
 
-class Base2
+//虚基类 Sheep
+class Sheep :virtual public Animal
 {
-public:
-    Base2()
-    {
-        m_A = 20;
-    }
-public:
-    int m_A;
 };
 
-//多继承
-class Son :public Base1, public Base2
+//虚基类 Tuo
+class Tuo :virtual public Animal
 {
-public:
-    int m_C;
-    int m_D;
 };
 
-//多继承中很容易引发二义性
+class SheepTuo :public Sheep, public Tuo
+{
+};
+
+//菱形继承的解决方案 利用虚继承
+//操作的是共享的一份数据
+
 void test01()
 {
-    cout << sizeof(Base1) << endl;
-    cout << sizeof(Base2) << endl;
-    cout << sizeof(Son) << endl;
+    SheepTuo st;
+    st.Sheep::m_Age = 10;
+    st.Tuo::m_Age = 20;
 
-    Son s1;
-    //s1.m_A; //二义性
+    cout << st.Sheep::m_Age << endl;
+    cout << st.Tuo::m_Age << endl;
+    cout << st.m_Age << endl; //可以直接访问，原因已经没有二义性的可能了，只有一份m_Age
+}
 
-    cout << s1.Base1::m_A << endl;
-    cout << s1.Base2::m_A << endl;
+//通过地址 找到 偏移量
+//内部工作原理
+void test02()
+{
+    SheepTuo st;
+    st.m_Age = 100;
+
+    //找到Sheep的偏移量操作
+    //cout<< *(int *)((int *)*(int *)&st + 1) << endl;
+
+    cout << *(int*)((int*)*(int *)&st + 1) << endl;
+
+    //找到Tuo的偏移量
+    cout << *((int *)((int *)*((int *)&st + 1) + 1)) << endl;
+
+    //输出Age
+    cout << ((Animal*)((char *)&st + *(int*)((int*)*(int *)&st + 1)))->m_Age << endl;
 }
 
 int main()
 {
-    test01();
+    //test01();
+    test02();
 
     system("pause");
     return EXIT_SUCCESS;
