@@ -1,56 +1,75 @@
-#include <iostream>
-
+#include<iostream>
 using namespace std;
 
-class MyInteger
+class Person
 {
-    friend ostream& operator<<(ostream& cout, MyInteger & myInt);
-private:
-    int m_Num;
-
 public:
-    MyInteger() { m_Num = 0; }
-
-    //前置++重载
-    MyInteger&operator++() {
-        this->m_Num++;
-        return *this;
+    Person(int age)
+    {
+        this->m_Age = age;
     }
 
-    //后置++ 重载
-    MyInteger operator++(int) {
-        //先保存目前数据
-        MyInteger tmp = *this;
-        m_Num++;
-        return tmp;
+    void showAge()
+    {
+        cout << "年龄为：" << this->m_Age << endl;
+    }
+    ~Person()
+    {
+        cout << "Person的析构调用" << endl;
+    }
+
+    int m_Age;
+};
+
+//智能指针
+//用来托管自定义类型的对象，让对象进行自动的释放
+class smartPointer
+{
+private:
+    Person * person;
+public:
+    smartPointer(Person * person) {
+        this->person = person;
+    }
+
+    //重载->让智能指针对象 像Person *p一样去使用
+    Person * operator->() {
+        return this->person;
+    }
+
+    //重载 *
+    Person& operator*()
+    {
+        return *this->person;
+    }
+
+    ~smartPointer()
+    {
+        cout << "智能指针析构了" << endl;
+        if (this->person != NULL)
+        {
+            delete this->person;
+            this->person = NULL;
+        }
     }
 };
 
-ostream& operator<<( ostream& cout ,MyInteger & myInt)
-{
-    cout << myInt.m_Num;
-    return cout;
-}
-
 void test01()
 {
-    MyInteger myInt;
+    //Person p1(10); //自动析构
 
-    // 前置++
-    cout << ++(++myInt) << endl;
-    cout << myInt << endl;
+    //Person * p1 = new Person(10);
+    //p1->showAge();
+	//delete p1;
 
-    myInt++; // 后置++
-    cout << myInt << endl;
+    smartPointer sp(new Person(10)); //sp开辟到了栈上，自动释放，调用析构
+    sp->showAge(); // sp->->showAge(); 编译器优化了 写法
+    (*sp).showAge();
 }
 
 int main()
 {
     test01();
-
-    /*int a = 10;
-    cout << ++(++a) << endl;
-    cout << a << endl;*/
 
     system("pause");
     return EXIT_SUCCESS;
