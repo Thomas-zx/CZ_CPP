@@ -1,46 +1,48 @@
-#include <iostream>
+#include<iostream>
 using namespace std;
 
-class Base
+class Base1
 {
 public:
-    static void func()
+    Base1()
     {
-        cout << "base fun()" << endl;
+        m_A = 10;
     }
-
-    static void func(int a)
-    {
-        cout << "base fun(int)" << endl;
-    }
-
-    static int m_A;
+public:
+    int m_A;
 };
-int Base::m_A = 10;
 
-class Son :public Base
+class Base2
 {
 public:
-    static void func()
+    Base2()
     {
-        cout << "son fun()" << endl;
+        m_A = 20;
     }
-
-    static int m_A;
+public:
+    int m_A;
 };
-int Son::m_A = 20;
 
-//静态成员属性 子类可以继承下来
+//多继承
+class Son :public Base1, public Base2
+{
+public:
+    int m_C;
+    int m_D;
+};
+
+//多继承中很容易引发二义性
 void test01()
 {
-    cout << Son::Base::m_A << endl;
-    //访问父类的m_A
-    cout << Base::m_A << endl;
+    cout << sizeof(Base1) << endl;
+    cout << sizeof(Base2) << endl;
+    cout << sizeof(Son) << endl;
 
-    Son::func();
-    //访问 父类中同名的函数
-    Son::Base::func(10);
+    Son s1;
+    //s1.m_A; //二义性
 
+    cout << s1.Base1::m_A << endl;
+    cout << s1.Base2::m_A << endl;
 }
 
 int main()
