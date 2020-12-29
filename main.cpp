@@ -1,145 +1,97 @@
-#include<iostream>
+#include <iostream>
 using namespace std;
 
-//class News
-//{
-//public:
-//	void header()
-//	{
-//		cout << "公共头部" << endl;
-//	}
-//	void footer()
-//	{
-//		cout << "公共底部" << endl;
-//	}
-//	void left()
-//	{
-//		cout << "左侧列表" << endl;
-//	}
-//
-//	void content()
-//	{
-//		cout << "新闻播放" << endl;
-//	}
-//
-//};
-//
-//class YULE
-//{
-//public:
-//	void header()
-//	{
-//		cout << "公共头部" << endl;
-//	}
-//	void footer()
-//	{
-//		cout << "公共底部" << endl;
-//	}
-//	void left()
-//	{
-//		cout << "左侧列表" << endl;
-//	}
-//
-//	void content()
-//	{
-//		cout << "白百合。。。" << endl;
-//	}
-//};
-//
-//void test01()
-//{
-//	News news;
-//	news.header();
-//	news.footer();
-//	news.left();
-//	news.content();
-//
-//	//娱乐页
-//	YULE yl;
-//	yl.header();
-//	yl.footer();
-//	yl.left();
-//	yl.content();
-//
-//}
-
-//继承写法
-//抽象一个 基类的网页  重复的代码都写到这个网页上
-class BasePage
+class Base1
 {
 public:
-    void header()
+    int m_A;
+protected:
+    int m_B;
+private:
+    int m_C;
+};
+
+//公有继承
+class Son1 : public Base1
+{
+public:
+    void func()
     {
-        cout << "公共头部" << endl;
-    }
-    void footer()
-    {
-        cout << "公共底部" << endl;
-    }
-    void left()
-    {
-        cout << "左侧列表" << endl;
+        //cout << m_C << endl; //基类中私有的属性 不可继承
+        cout << m_A << endl; //基类中公有的属性 可继承，还是public
+        cout << m_B << endl;//基类中保护的属性 可继承，还是protected 类外访问不到
     }
 };
 
-class News :public BasePage //继承  News类 继承于 BasePage类
+void myFunc()
 {
-public:
-    void content()
-    {
-        cout << "新闻播放" << endl;
-    }
-};
-
-class YULE :public BasePage
-{
-public:
-    void content()
-    {
-        cout << "白百合。。。" << endl;
-    }
-};
-
-class Game :public BasePage
-{
-public:
-    void content()
-    {
-        cout << "KPL直播" << endl;
-    }
-};
-
-void test02()
-{
-    cout << " 新闻网页内容： " << endl;
-    News news;
-    news.header();
-    news.footer();
-    news.left();
-    news.content();
-
-    cout << " 娱乐网页内容： " << endl;
-    YULE yl;
-    yl.header();
-    yl.footer();
-    yl.left();
-    yl.content();
-
-    cout << " 游戏网页内容： " << endl;
-    Game game;
-    game.header();
-    game.footer();
-    game.left();
-    game.content();
+    Son1 s1;
+    s1.m_A;
+    //s1.m_B;
 }
 
-//继承 减少代码重复内容
-//BasePage  基类 (父类)   News 派生类 （子类）
+////////////////////////////////////////保护继承////////////////////////////////////////
+class Base2
+{
+public:
+    int m_A;
+protected:
+    int m_B;
+private:
+    int m_C;
+};
+
+class Son2 :protected Base2
+{
+public:
+    void func()
+    {
+        //cout << m_C << endl; //基类中私有的属性 不可继承
+        cout << m_A << endl;//基类中公有的属性 可继承，还是protected
+        cout << m_B << endl;//基类中保护的属性 可继承，还是protected
+    }
+};
+
+void myFunc2()
+{
+    Son2 s;
+    //s.m_A; 不能访问
+}
+
+////////////////////////////////////////私有继承////////////////////////////////////////
+class Base3
+{
+public:
+    int m_A;
+protected:
+    int m_B;
+private:
+    int m_C;
+};
+
+class Son3 :private Base3
+{
+public:
+    void func()
+    {
+        //cout << m_C << endl; //基类中私有的属性 不可继承
+        cout << m_A << endl; //基类中公有的属性 可继承，还是private
+        cout << m_B << endl;//基类中保护的属性 可继承，还是private
+    }
+};
+
+class GrandSon3 :public Son3
+{
+public:
+    void myFunc()
+    {
+        //cout << m_A << endl; //孙子类中 访问不到 m_A，因为在Son3中m_A已经是私有属性了
+    }
+
+};
+
 int main()
 {
-    //test01();
-    test02();
-
     system("pause");
     return EXIT_SUCCESS;
 }
