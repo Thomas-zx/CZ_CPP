@@ -1,44 +1,50 @@
 #include <iostream>
-#include <string>
+#include "48_MyString.h"
 using namespace std;
 
-// ()重载
-class MyPrint
-{
-public:
-    void operator()( string text)
-    {
-        cout << text << endl;
-    }
-};
-
+//测试 MyString
 void test01()
 {
-    MyPrint myPrint;
-    myPrint("hello world 1111");    //仿函数
-}
+    MyString str = "abc";
 
-class MyAdd
-{
-public:
-    int operator()(int v1,int v2)
+    cout << str << endl;
+
+    cout << "请输入str新的内容：" << endl;
+    cin >> str;
+    cout << "新内容为：" << str << endl;
+
+    MyString str2(str);
+    MyString str3 = "aaaaaa";
+
+    str3 = str2;
+    str3 = "aaaa";
+    cout << "str3 = " << str3 << endl;
+
+    str3[0] = 'w';
+    cout << "str3 第一个位置为 = " << str3[0] << endl;
+
+    MyString str4 = "";
+    str4 = str2 + str3; //字符串拼接
+
+    cout << "str4 为 " << str4 << endl;
+
+    if (str3 == str4)
     {
-        return v1 + v2;
+        cout << "str3 与 str4相等" << endl;
     }
-};
+    else
+    {
+        cout << "str3 与 str4不相等" << endl;
+    }
 
-void test02()
-{
-    //MyAdd myAdd;
-    //cout << myAdd(1, 1) << endl;
-
-    cout << MyAdd()(1, 1) << endl; //匿名对象
+    /*int a = 10;
+    cin >> a;
+    cout << "a = " << a << endl;*/
 }
 
 int main()
 {
-    //test01();
-    test02();
+    test01();
 
     system("pause");
     return EXIT_SUCCESS;
