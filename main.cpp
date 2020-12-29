@@ -1,4 +1,4 @@
-#include<iostream>
+#include <iostream>
 using namespace std;
 
 class Base
@@ -6,68 +6,60 @@ class Base
 public:
     Base()
     {
-        m_A = 10;
-        cout << "Base默认构造函数调用" << endl;
+        m_A = 100;
     }
-    ~Base()
+
+    void fun()
     {
-        cout << "Base的析构函数调用" << endl;
+        cout << "Base func调用" << endl;
+    }
+
+    void fun(int a)
+    {
+        cout << "Base func (int a)调用" << endl;
     }
 
     int m_A;
 };
-// 子类会继承父类的成员属性，成员函数
-//但是 子类 不会继承 父类 构造函数 和 析构函数
-//只有父类自己知道，如果构造和析构自己的属性，而子类不知道
 
-class Son : public Base
+class Son :public Base
 {
 public:
     Son()
     {
-        cout << "Son默认构造函数调用" << endl;
+        m_A = 200;
     }
-    ~Son()
+
+    void fun()
     {
-        cout << "Son的析构函数调用" << endl;
+        cout << "Son func调用" << endl;
     }
+
+    int m_A;
 };
 
 void test01()
 {
-    //Base b1;
     Son s1;
+    cout << s1.m_A << endl;
+
+    //想调用 父类中 的m_A
+    cout << s1.Base::m_A << endl;
+
+    s1.fun();
+
+    //调用父类的func
+    s1.Base::fun(10);
+
 }
 
-class Base2
-{
-public:
-    Base2(int a)
-    {
-        this->m_A = a;
-        cout << "Base2有参构造函数调用" << endl;
-    }
-    int m_A;
-};
-
-class Son2 : public Base2
-{
-public:
-    Son2(int a ) : Base2(a)//利用初始化列表方式 显示调用 有参构造
-    {
-        cout << "Son2有参构造函数调用" << endl;
-    }
-};
-
-void test02()
-{
-    Son2 s2(1000);
-}
+//如果子类和父类拥有同名的函数 属性 ，子类会覆盖父类的成员吗？ 不会
+//如果子类与父类的成员函数名称相同，子类会把父类的所有的同名版本都隐藏掉
+//想调用父类的方法，必须加作用域
 
 int main()
 {
     test01();
-    test02();
 
     system("pause");
     return EXIT_SUCCESS;
