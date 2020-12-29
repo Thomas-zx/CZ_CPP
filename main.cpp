@@ -1,38 +1,56 @@
 #include <iostream>
 
 using namespace std;
-class Person
-{
-    friend ostream& operator<<(ostream &cout, Person &p1);
-public:
-    Person() {m_A = 0; m_B = 0;};
-    Person(int a, int b) : m_A(a), m_B(b)
-    {}
 
-    /*void operator<<()重载左移运算符不可以写到成员函数中
-    */
+class MyInteger
+{
+    friend ostream& operator<<(ostream& cout, MyInteger & myInt);
+private:
+    int m_Num;
+
 public:
-    int m_A;
-    int m_B;
+    MyInteger() { m_Num = 0; }
+
+    //前置++重载
+    MyInteger&operator++() {
+        this->m_Num++;
+        return *this;
+    }
+
+    //后置++ 重载
+    MyInteger operator++(int) {
+        //先保存目前数据
+        MyInteger tmp = *this;
+        m_Num++;
+        return tmp;
+    }
 };
 
-ostream& operator<<(ostream &cout, Person &p1)  //第一个参数 cout，第二个参数 p1
+ostream& operator<<( ostream& cout ,MyInteger & myInt)
 {
-    cout << "m_A = " << p1.m_A << " m_B = " << p1.m_B << " ";
-
+    cout << myInt.m_Num;
     return cout;
 }
 
 void test01()
 {
-    Person p1(10, 10);
+    MyInteger myInt;
 
-    cout << p1 << "hello,world" <<endl;
+    // 前置++
+    cout << ++(++myInt) << endl;
+    cout << myInt << endl;
+
+    myInt++; // 后置++
+    cout << myInt << endl;
 }
 
 int main()
 {
     test01();
+
+    /*int a = 10;
+    cout << ++(++a) << endl;
+    cout << a << endl;*/
 
     system("pause");
     return EXIT_SUCCESS;
