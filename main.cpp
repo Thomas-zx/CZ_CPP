@@ -1,75 +1,87 @@
 #include<iostream>
 using namespace std;
 
+//一个类默认创建 默认构造、析构、拷贝构造 operator=赋值运算符 进行简单的值传递
 class Person
 {
 public:
-    Person(int age)
+    Person(int a)
     {
-        this->m_Age = age;
+        this->m_A = a;
     }
 
-    void showAge()
-    {
-        cout << "年龄为：" << this->m_Age << endl;
-    }
-    ~Person()
-    {
-        cout << "Person的析构调用" << endl;
-    }
-
-    int m_Age;
-};
-
-//智能指针
-//用来托管自定义类型的对象，让对象进行自动的释放
-class smartPointer
-{
-private:
-    Person * person;
-public:
-    smartPointer(Person * person) {
-        this->person = person;
-    }
-
-    //重载->让智能指针对象 像Person *p一样去使用
-    Person * operator->() {
-        return this->person;
-    }
-
-    //重载 *
-    Person& operator*()
-    {
-        return *this->person;
-    }
-
-    ~smartPointer()
-    {
-        cout << "智能指针析构了" << endl;
-        if (this->person != NULL)
-        {
-            delete this->person;
-            this->person = NULL;
-        }
-    }
+    int m_A;
 };
 
 void test01()
 {
-    //Person p1(10); //自动析构
+    Person p1(10);
+    Person p2(0);
 
-    //Person * p1 = new Person(10);
-    //p1->showAge();
-	//delete p1;
+    p2 = p1; //赋值
 
-    smartPointer sp(new Person(10)); //sp开辟到了栈上，自动释放，调用析构
-    sp->showAge(); // sp->->showAge(); 编译器优化了 写法
-    (*sp).showAge();
+    cout << "p2的m_A=" << p2.m_A <<endl;
+}
+
+class Person2
+{
+public:
+    Person2(char * name)
+    {
+        this->pName = new char[strlen(name) + 1];
+        strcpy(this->pName, name);
+    }
+
+    //重载 = 赋值运算符
+    Person2& operator= ( const Person2 & p)
+    {
+        //判断如果原来已经堆区有内容，先释放
+        if (this->pName != NULL)
+        {
+            delete[] this->pName;
+            this->pName = NULL;
+        }
+
+        this->pName = new char[strlen(p.pName) + 1];
+        strcpy(this->pName, p.pName);
+
+        return *this;
+    }
+
+    ~Person2()
+    {
+        if (this->pName != NULL)
+        {
+            delete[] this->pName;
+            this->pName = NULL;
+        }
+    }
+
+    char * pName;
+};
+
+void test02()
+{
+    Person2 p1("狗蛋");
+    Person2 p2("狗剩");
+    Person2 p3("");
+    p3 = p2 = p1;
+
+    cout << p1.pName << endl;
+    cout << p2.pName << endl;
+    cout << p3.pName << endl;
+
+    //int a = 10;
+    //int b = 20;
+    //int c;
+    //c = a = b; //都是20
+    //cout << a << " " << b << " " << c << endl;
 }
 
 int main()
 {
-    test01();
+    //test01();
+    test02();
 
     system("pause");
     return EXIT_SUCCESS;
