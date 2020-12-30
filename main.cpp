@@ -1,62 +1,115 @@
-#include<iostream>
+#include <iostream>
+#include <string>
 using namespace std;
 
-class Animal
+//class Calculator
+//{
+//public:
+//
+//    void setv1(int v) {
+//       this->val1 = v;
+//    }
+//    void setv2(int v) {
+//        this->val2 = v;
+//    }
+//
+//    int getResult(string oper)
+//    {
+//        if (oper == "+") {
+//            return val1 + val2;
+//        }
+//        else if (oper == "-") {
+//            return val1 - val2;
+//        }
+//    }
+//
+//    int val1;
+//    int val2;
+//};
+
+//void test01()
+//{
+//    int val;
+//
+//    Calculator cal;
+//    cal.setv1(10);
+//    cal.setv2(20);
+//    val = cal.getResult("+");
+//    cout << val << endl;
+//}
+
+//利用多态实现计算器
+class abstractCalculator
 {
 public:
-    virtual void speak()
-    {
-        cout << "动物在说话" << endl;
+    virtual int getResult() { return 0;}
+
+    void setv1(int v) {
+       this->val1 = v;
+    }
+    void setv2(int v) {
+        this->val2 = v;
     }
 
-    virtual void eat()
-    {
-        cout << "动物在吃饭" << endl;
+    int getv1() {
+        return this->val1;
+    }
+    int getv2() {
+        return this->val2;
+    }
+private:
+    int val1;
+    int val2;
+};
+
+class PlusCalculator : public abstractCalculator
+{
+public:
+    virtual int getResult() {
+        return getv1() + getv2();
     }
 };
 
-class Cat : public Animal
+class SubCalculator : public abstractCalculator
 {
 public:
-    void speak()
-    {
-        cout << "小猫在说话" << endl;
-    }
-
-    virtual void eat()
-    {
-        cout << "小猫在吃鱼" << endl;
+    virtual int getResult() {
+        return getv1() - getv2();
     }
 };
 
-//调用doSpeak ，speak函数的地址早就绑定好了，早绑定，静态联编，编译阶段就确定好了地址
-//如果想调用猫的speak，不能提前绑定好函数的地址了，所以需要在运行时候再去确定函数地址
-//动态联编，写法 doSpeak方法改为虚函数,在父类上声明虚函数，发生了多态
-// 父类的引用或者指针 指向 子类对象
-void doSpeak(Animal & animal) //Animal & animal = cat
+//扩展
+class DivCalculator : public abstractCalculator
 {
-    animal.speak();
-}
-//如果发生了继承的关系，编译器允许进行类型转换
-
-void test01()
-{
-    Cat cat;
-    doSpeak(cat);
-}
+public:
+    virtual int getResult() {
+        return getv1() / getv2();
+    }
+};
 
 void test02()
 {
-    cout << sizeof(Animal) << endl;
-    //父类指针指向子类对象 多态
-    Animal * animal = new Cat;
+    abstractCalculator *abc;
 
-    animal->speak();
-    // *(int*)*(int*)animal 函数地址
-    //((void(*)()) (*(int*)*(int*)animal))();
+    //加法计算器
+    abc = new PlusCalculator;
+    abc->setv1(15);
+    abc->setv2(5);
+    cout << "计算器:" << abc->getResult() << endl;
 
-    //*((int*)*(int*)animal+1)猫吃鱼的地址
-    //((void(*)()) (*((int*)*(int*)animal + 1)))();
+    delete abc;
+
+    abc = new SubCalculator;
+    abc->setv1(15);
+    abc->setv2(5);
+    cout << "计算器:" << abc->getResult() << endl;
+
+    delete abc;
+
+    abc = new DivCalculator;
+    abc->setv1(15);
+    abc->setv2(5);
+    cout << "计算器:" << abc->getResult() << endl;
 }
 
 int main()
