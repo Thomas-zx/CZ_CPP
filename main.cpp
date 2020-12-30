@@ -1,135 +1,84 @@
-//
-// Created by 张兴 on 2020-12-30.
-//
 #include <iostream>
-#include <string>
 using namespace std;
 
-//class Calculator
-//{
-//public:
-//
-//    void setv1(int v) {
-//       this->val1 = v;
-//    }
-//    void setv2(int v) {
-//        this->val2 = v;
-//    }
-//
-//    int getResult(string oper)
-//    {
-//        if (oper == "+") {
-//            return val1 + val2;
-//        }
-//        else if (oper == "-") {
-//            return val1 - val2;
-//        }
-//    }
-//
-//    int val1;
-//    int val2;
-//};
+class Animal
+{
+public:
+    virtual void speak()
+    {
+        cout << "动物在说话" << endl;
+    }
 
-//void test01()
+    Animal()
+    {
+        cout << "Animal的构造调用" << endl;
+    }
+
+    //普通析构 是不会调用子类的析构的，所以可能会导致释放不干净
+    //利用虚析构来解决这个问题
+    //virtual ~Animal()
+    //{
+    //    cout << "Animal的析构调用" << endl;
+    //}
+
+    //纯虚析构 写法如下
+    //纯虚析构 ，需要声明 还需要实现 类内声明，类外实现
+    virtual ~Animal() = 0;
+    //如果函数中出现了 纯虚析构函数，那么这个类也算抽象类
+    //抽象类 不可实例化对象
+};
+
+Animal::~Animal()
+{
+    //纯虚析构函数实现
+    cout << "Animal的纯虚析构调用" << endl;
+}
+
+// 如果出现纯虚析构，类也算抽象类，不能实例化对象
+//void func()
 //{
-//    int val;
-//
-//    Calculator cal;
-//    cal.setv1(10);
-//    cal.setv2(20);
-//    val = cal.getResult("+");
-//    cout << val << endl;
+//	Animal an;
+//	Animal * animal = new Animal;
 //}
 
-//如果父类中有了纯虚函数，子类继承父类，子类必须实现纯虚函数
-//如果父类中有了纯虚函数，这个父类就无法实例化对象了
-//这个类有了纯虚函数，通常又被称为抽象类
-
-//利用多态实现计算器
-class abstractCalculator
+class Cat : public Animal
 {
 public:
-    //virtual int getResult() { return 0;}
-
-    //纯虚函数
-    virtual int getResult() = 0;
-
-    void setv1(int v) {
-        this->val1 = v;
-    }
-    void setv2(int v) {
-        this->val2 = v;
+    Cat(const char * name)
+    {
+        this->m_Name = new char[strlen(name) + 1];
+        strcpy(this->m_Name, name);
     }
 
-    int getv1() {
-        return this->val1;
+    virtual void speak()
+    {
+        cout << "小猫在说话" << endl;
     }
-    int getv2() {
-        return this->val2;
+
+    ~Cat()
+    {
+        cout << "Cat的析构调用" << endl;
+        if (this->m_Name != NULL)
+        {
+            delete[] this->m_Name;
+            this->m_Name = NULL;
+        }
     }
-private:
-    int val1;
-    int val2;
+
+    char * m_Name;
 };
 
-class PlusCalculator : public abstractCalculator
+void test01()
 {
-public:
-    virtual int getResult() {
-        return getv1() + getv2();
-    }
-};
+    Animal * animal = new Cat("TOM");
+    animal->speak();
 
-class SubCalculator : public abstractCalculator
-{
-public:
-    virtual int getResult() {
-        return getv1() - getv2();
-    }
-};
-
-//扩展
-class DivCalculator : public abstractCalculator
-{
-public:
-    virtual int getResult() {
-        return getv1() / getv2();
-    }
-};
-
-void test02()
-{
-    abstractCalculator *abc;
-
-    //如果父类中有了纯虚函数，这个父类就无法实例化对象了
-    //abstractCalculator abc1;
-    //abstractCalculator *abc2 = new abstractCalculator;
-
-    //加法计算器
-    abc = new PlusCalculator;
-    abc->setv1(15);
-    abc->setv2(5);
-    cout << "计算器:" << abc->getResult() << endl;
-
-    delete abc;
-
-    abc = new SubCalculator;
-    abc->setv1(15);
-    abc->setv2(5);
-    cout << "计算器:" << abc->getResult() << endl;
-
-    delete abc;
-
-    abc = new DivCalculator;
-    abc->setv1(15);
-    abc->setv2(5);
-    cout << "计算器:" << abc->getResult() << endl;
+    delete animal;
 }
 
 int main()
 {
-    //test01();
-    test02();
+    test01();
 
     system("pause");
     return EXIT_SUCCESS;
