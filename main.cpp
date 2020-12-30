@@ -1,84 +1,92 @@
 #include <iostream>
+#include <ctime>
+#include "61_Weapon.h"
+#include "61_Knife.h"
+#include "61_DragonSword.h"
+#include "61_Hero.h"
+#include "61_Monster.h"
+
 using namespace std;
 
-class Animal
+void play()
 {
-public:
-    virtual void speak()
+    //创建怪物
+    Monster * monster = new Monster;
+    //创建英雄
+    Hero * hero = new Hero;
+
+    //创建武器
+    Weapon * kinfe = new Knife;
+    Weapon * dragon = new DragonSword;
+
+    //让用户选择 武器
+    cout << "请选择武器：" << endl;
+    cout << "1. 赤手空拳" << endl;
+    cout << "2. 小刀" << endl;
+    cout << "3. 屠龙刀" << endl;
+
+    int oper;
+    cin >> oper;
+    switch (oper)
     {
-        cout << "动物在说话" << endl;
+        case 1:
+            cout << "你真牛X，你还是太年轻了！" << endl;
+            break;
+        case 2:
+            hero->EquipWeapon(kinfe);
+            break;
+        case 3:
+            hero->EquipWeapon(dragon);
+            break;
     }
 
-    Animal()
+    getchar(); //输入缓冲区里有个回车 ，多获取一次值
+
+    int round = 1;
+
+    while (true)
     {
-        cout << "Animal的构造调用" << endl;
-    }
+        getchar();
+        system("cls");
 
-    //普通析构 是不会调用子类的析构的，所以可能会导致释放不干净
-    //利用虚析构来解决这个问题
-    //virtual ~Animal()
-    //{
-    //    cout << "Animal的析构调用" << endl;
-    //}
-
-    //纯虚析构 写法如下
-    //纯虚析构 ，需要声明 还需要实现 类内声明，类外实现
-    virtual ~Animal() = 0;
-    //如果函数中出现了 纯虚析构函数，那么这个类也算抽象类
-    //抽象类 不可实例化对象
-};
-
-Animal::~Animal()
-{
-    //纯虚析构函数实现
-    cout << "Animal的纯虚析构调用" << endl;
-}
-
-// 如果出现纯虚析构，类也算抽象类，不能实例化对象
-//void func()
-//{
-//	Animal an;
-//	Animal * animal = new Animal;
-//}
-
-class Cat : public Animal
-{
-public:
-    Cat(const char * name)
-    {
-        this->m_Name = new char[strlen(name) + 1];
-        strcpy(this->m_Name, name);
-    }
-
-    virtual void speak()
-    {
-        cout << "小猫在说话" << endl;
-    }
-
-    ~Cat()
-    {
-        cout << "Cat的析构调用" << endl;
-        if (this->m_Name != NULL)
+        cout << "----- 当前第 " << round << " 回合开始 ------" << endl;
+        if (hero->m_Hp <= 0)
         {
-            delete[] this->m_Name;
-            this->m_Name = NULL;
+            cout << "英雄" << hero->m_Name << "已挂 ，游戏结束" << endl;
+            break;
         }
+        hero->Attack(monster);
+
+        if (monster->m_Hp <= 0)
+        {
+            cout << "怪物" << monster->m_Name << "已挂，顺利通关" << endl;
+            break;
+        }
+        monster->Attack(hero);
+
+
+        if (hero->m_Hp <= 0)
+        {
+            cout << "英雄" << hero->m_Name << "已挂 ，游戏结束" << endl;
+            break;
+        }
+
+        cout << "英雄" << hero->m_Name << "剩余血量：" << hero->m_Hp << endl;
+        cout << "怪物" << monster->m_Name << "剩余血量：" << monster->m_Hp << endl;
+
+        round++;
     }
 
-    char * m_Name;
-};
-
-void test01()
-{
-    Animal * animal = new Cat("TOM");
-    animal->speak();
-
-    delete animal;
+    delete monster;
+    delete hero;
+    delete kinfe;
+    delete dragon;
 }
 
 int main()
 {
-    test01();
+    srand((unsigned int)time(NULL));
+    play();
 
     system("pause");
     return EXIT_SUCCESS;
