@@ -41,18 +41,11 @@ using namespace std;
 //    cout << val << endl;
 //}
 
-//如果父类中有了纯虚函数，子类继承父类，子类必须实现纯虚函数
-//如果父类中有了纯虚函数，这个父类就无法实例化对象了
-//这个类有了纯虚函数，通常又被称为抽象类
-
 //利用多态实现计算器
 class abstractCalculator
 {
 public:
-    //virtual int getResult() { return 0;}
-
-    //纯虚函数
-    virtual int getResult() = 0;
+    virtual int getResult() { return 0;}
 
     void setv1(int v) {
         this->val1 = v;
@@ -100,10 +93,6 @@ public:
 void test02()
 {
     abstractCalculator *abc;
-
-    //如果父类中有了纯虚函数，这个父类就无法实例化对象了
-    //abstractCalculator abc1;
-    //abstractCalculator *abc2 = new abstractCalculator;
 
     //加法计算器
     abc = new PlusCalculator;
