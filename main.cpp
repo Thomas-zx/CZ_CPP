@@ -1,57 +1,62 @@
-#include <iostream>
+#include<iostream>
 using namespace std;
 
 class Animal
 {
 public:
-    int m_Age;
+    virtual void speak()
+    {
+        cout << "动物在说话" << endl;
+    }
+
+    virtual void eat()
+    {
+        cout << "动物在吃饭" << endl;
+    }
 };
 
-//虚基类 Sheep
-class Sheep :virtual public Animal
+class Cat : public Animal
 {
+public:
+    void speak()
+    {
+        cout << "小猫在说话" << endl;
+    }
+
+    virtual void eat()
+    {
+        cout << "小猫在吃鱼" << endl;
+    }
 };
 
-//虚基类 Tuo
-class Tuo :virtual public Animal
+//调用doSpeak ，speak函数的地址早就绑定好了，早绑定，静态联编，编译阶段就确定好了地址
+//如果想调用猫的speak，不能提前绑定好函数的地址了，所以需要在运行时候再去确定函数地址
+//动态联编，写法 doSpeak方法改为虚函数,在父类上声明虚函数，发生了多态
+// 父类的引用或者指针 指向 子类对象
+void doSpeak(Animal & animal) //Animal & animal = cat
 {
-};
-
-class SheepTuo :public Sheep, public Tuo
-{
-};
-
-//菱形继承的解决方案 利用虚继承
-//操作的是共享的一份数据
+    animal.speak();
+}
+//如果发生了继承的关系，编译器允许进行类型转换
 
 void test01()
 {
-    SheepTuo st;
-    st.Sheep::m_Age = 10;
-    st.Tuo::m_Age = 20;
-
-    cout << st.Sheep::m_Age << endl;
-    cout << st.Tuo::m_Age << endl;
-    cout << st.m_Age << endl; //可以直接访问，原因已经没有二义性的可能了，只有一份m_Age
+    Cat cat;
+    doSpeak(cat);
 }
 
-//通过地址 找到 偏移量
-//内部工作原理
 void test02()
 {
-    SheepTuo st;
-    st.m_Age = 100;
+    cout << sizeof(Animal) << endl;
+    //父类指针指向子类对象 多态
+    Animal * animal = new Cat;
 
-    //找到Sheep的偏移量操作
-    //cout<< *(int *)((int *)*(int *)&st + 1) << endl;
+    animal->speak();
+    // *(int*)*(int*)animal 函数地址
+    //((void(*)()) (*(int*)*(int*)animal))();
 
-    cout << *(int*)((int*)*(int *)&st + 1) << endl;
-
-    //找到Tuo的偏移量
-    cout << *((int *)((int *)*((int *)&st + 1) + 1)) << endl;
-
-    //输出Age
-    cout << ((Animal*)((char *)&st + *(int*)((int*)*(int *)&st + 1)))->m_Age << endl;
+    //*((int*)*(int*)animal+1)猫吃鱼的地址
+    //((void(*)()) (*((int*)*(int*)animal + 1)))();
 }
 
 int main()
