@@ -1,62 +1,84 @@
-#include <iostream>
+#include<iostream>
 #include <string>
 using namespace std;
 
+//类模板
+template <class NameType, class AgeType = int> //类模板可以有默认类型
 class Person
 {
 public:
-    Person(string name, int age)
+    Person(NameType name, AgeType age)
     {
         this->m_Name = name;
         this->m_Age = age;
     }
-    string m_Name;
-    int m_Age;
+
+    void showPerson()
+    {
+        cout << "姓名：" << this->m_Name << " 年龄： " << this->m_Age << endl;
+    }
+
+    NameType m_Name;
+    AgeType m_Age;
 };
-
-template<class T>
-bool myCompare( T &a , T &b )
-{
-    if ( a == b)
-    {
-        return true;
-    }
-    return false;
-}
-
-// 通过第三代具体化自定义数据类型，解决上述问题
-// 如果具体化能够优先匹配，那么就选择具体化
-// 语法  template<> 返回值  函数名<具体类型>(参数)
-template<> bool myCompare<Person>(Person &a, Person &b)
-{
-    if ( a.m_Age  == b.m_Age)
-    {
-        return true;
-    }
-
-    return false;
-}
 
 void test01()
 {
-    int a = 10;
-    int b = 20;
+    //自动类型推导 ，类模板 不支持
+    //Person p("孙悟空", 100);
 
-    int ret = myCompare(a, b);
+    //显示指定类型
+    Person<string, int> p("孙悟空", 100);
+    p.showPerson();
+}
 
-    cout << "ret = " << ret << endl;
+class Person1
+{
+public:
+    void showPerson1()
+    {
+        cout << "Person1的调用" << endl;
+    }
+};
 
-    Person p1("Tom", 10);
-    Person p2("Jerry", 10);
+class Person2
+{
+public:
+    void showPerson2()
+    {
+        cout << "Person2的调用" << endl;
+    }
+};
 
-    int ret2 = myCompare(p1, p2);
+template<class T>
+class myClass
+{
+public:
+    T obj;
+    void func1()
+    {
+        obj.showPerson1();
+    }
+    void func2()
+    {
+        obj.showPerson2();
+    }
+};
+//类模板中成员函数 一开始不会创建出来，而是在运行时才去创建
 
-    cout << "ret2 = " << ret2 << endl;
+void test02()
+{
+    myClass<Person1>m1;
+    myClass<Person2>m2;
+
+    m1.func1();
+    m2.func2();
 }
 
 int main()
 {
-    test01();
+	//test01();
+    test02();
 
     system("pause");
     return EXIT_SUCCESS;
