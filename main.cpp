@@ -1,36 +1,44 @@
 #include <iostream>
+#include <string>
 using namespace std;
 
-template <class T>
-class Base
+template<class T1 ,class T2>
+class Person
 {
 public:
-    T m_A; //double类型
+    Person(T1 name, T2  age);
+    //{
+    //	this->m_Name = name;
+    //	this->m_Age = age;
+    //}
+
+    void showPerson();
+    //{
+    //	cout << "姓名：" << this->m_Name << "  年龄：  " << this->m_Age << endl;
+    //}
+
+    T1 m_Name;
+    T2 m_Age;
 };
 
-//child继承与 base必须告诉base中的T的类型，否则T无法分配内存
-class Child : public Base<int>
+//类外实现成员函数
+template <class T1, class T2>
+Person<T1, T2>::Person(T1 name, T2 age)
 {
+    this->m_Name = name;
+    this->m_Age = age;
+}
 
-};
-
-//child2 也是模板类
-template<class T1, class T2>
-class Child2 :public Base<T2>
+template <class T1, class T2>
+void Person<T1, T2>::showPerson()
 {
-public:
-    Child2()
-    {
-        cout << typeid(T1).name() << endl;
-        cout << typeid(T2).name() << endl;
-    }
-public:
-    T1 m_B; //int类型
-};
+    cout << "姓名：" << this->m_Name << "  年龄：" << this->m_Age << endl;
+}
 
 void test01()
 {
-    Child2<int, double> child;//由用户指定类型
+    Person <string ,int> p1("Mt", 100);
+    p1.showPerson();
 }
 
 int main()
