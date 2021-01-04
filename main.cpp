@@ -1,49 +1,62 @@
 #include <iostream>
 #include <string>
+#include "73_MyArray.hpp"
 using namespace std;
 
-//让编译器提前看到printPerson声明
+//输出int类型数组
+void printIntArray(  MyArray<int>& array)
+{
+    for (int i = 0; i < array.getSize();i++)
+    {
+        cout << array[i] << endl;
+    }
+}
 
-//让编译器看到Person类声明
-template<class T1, class T2> class Person;
-template<class T1, class T2> void printPerson(Person<T1, T2> & p);
-
-template<class T1, class T2>
 class Person
 {
-    //友元函数类内实现  利用空参数列表 告诉编译器 模板函数的声明
-    friend void printPerson<>(Person<T1, T2> & p); //普通函数 声明
-    /*{
-        cout << "姓名：" << p.m_Name << "  年龄： " << p.m_Age << endl;
-    }*/
 public:
-    Person(T1 name, T2 age)
+    Person(){};
+
+    Person(string name, int age)
     {
         this->m_Name = name;
         this->m_Age = age;
     }
-
-private:
-    T1 m_Name;
-    T2 m_Age;
+    string m_Name;
+    int m_Age;
 };
 
-//类外实现
-template<class T1 ,class T2>
-void printPerson(Person<T1, T2> & p)
+//输出Person类型数组
+void printPersonArray( MyArray<Person> & array )
 {
-    cout << "姓名：" << p.m_Name << "  年龄： " << p.m_Age << endl;
-}
-
-void test01()
-{
-    Person<string, int> p("Tom", 10);
-    printPerson(p);
+    for (int  i = 0; i < array.getSize(); i++)
+    {
+        cout << "姓名： " << array[i].m_Name << " 年龄： " << array[i].m_Age << endl;
+    }
 }
 
 int main()
 {
-    test01();
+    MyArray <int >arr(10);
+    for (int i = 0; i < 10;i++)
+    {
+        arr.push_Back(i + 100);
+    }
+
+    printIntArray(arr);
+
+    Person p1("MT", 10);
+    Person p2("呆贼", 12);
+    Person p3("傻馒", 14);
+    Person p4("劣人", 15);
+
+    MyArray<Person>arr2(10);
+    arr2.push_Back(p1);
+    arr2.push_Back(p2);
+    arr2.push_Back(p3);
+    arr2.push_Back(p4);
+
+    printPersonArray(arr2);
 
     system("pause");
     return EXIT_SUCCESS;
