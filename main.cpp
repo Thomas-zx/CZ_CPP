@@ -1,4 +1,4 @@
-#include<iostream>
+#include <iostream>
 #include <string>
 using namespace std;
 
@@ -22,63 +22,54 @@ public:
     AgeType m_Age;
 };
 
-void test01()
+//1.指定传入类型
+void doWork( Person<string ,int> & p )
 {
-    //自动类型推导 ，类模板 不支持
-    //Person p("孙悟空", 100);
-
-    //显示指定类型
-    Person<string, int> p("孙悟空", 100);
     p.showPerson();
 }
 
-class Person1
+void test01()
 {
-public:
-    void showPerson1()
-    {
-        cout << "Person1的调用" << endl;
-    }
-};
+    Person <string, int> p("MT",10);
+    doWork(p);
+}
 
-class Person2
+//2.参数模板化
+template<class T1 ,class T2>
+void doWork2(Person<T1, T2> & p)
 {
-public:
-    void showPerson2()
-    {
-        cout << "Person2的调用" << endl;
-    }
-};
-
-template<class T>
-class myClass
-{
-public:
-    T obj;
-    void func1()
-    {
-        obj.showPerson1();
-    }
-    void func2()
-    {
-        obj.showPerson2();
-    }
-};
-//类模板中成员函数 一开始不会创建出来，而是在运行时才去创建
-
+    //如何查看类型
+    cout << typeid(T1).name() << endl;
+    cout << typeid(T2).name() << endl;
+    p.showPerson();
+}
 void test02()
 {
-    myClass<Person1>m1;
-    myClass<Person2>m2;
+    Person <string, int> p("呆贼", 18);
 
-    m1.func1();
-    m2.func2();
+    doWork2(p);
+}
+
+//3.整体模板化
+template<class T>
+void doWork3(T& p)
+{
+    cout << typeid(T).name() << endl;
+    p.showPerson();
+}
+
+void test03()
+{
+    Person <string, int> p("劣人", 18);
+
+    doWork3(p);
 }
 
 int main()
 {
 	//test01();
-    test02();
+    //test02();
+    test03();
 
     system("pause");
     return EXIT_SUCCESS;
