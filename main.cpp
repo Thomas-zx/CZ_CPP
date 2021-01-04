@@ -1,76 +1,62 @@
 #include <iostream>
+#include <string>
 using namespace std;
 
-//1.普通函数与函数模板区别
-template <class T>
-T myPlus(T a, T b)
+class Person
 {
-    return a + b;
+public:
+    Person(string name, int age)
+    {
+        this->m_Name = name;
+        this->m_Age = age;
+    }
+    string m_Name;
+    int m_Age;
+};
+
+template<class T>
+bool myCompare( T &a , T &b )
+{
+    if ( a == b)
+    {
+        return true;
+    }
+    return false;
 }
 
-int myPlus2(int a, int b)
+// 通过第三代具体化自定义数据类型，解决上述问题
+// 如果具体化能够优先匹配，那么就选择具体化
+// 语法  template<> 返回值  函数名<具体类型>(参数)
+template<> bool myCompare<Person>(Person &a, Person &b)
 {
-    return a + b;
+    if ( a.m_Age  == b.m_Age)
+    {
+        return true;
+    }
+
+    return false;
 }
 
 void test01()
 {
     int a = 10;
     int b = 20;
-    char c = 'c';
-    //myPlus(a, c); //类型推导不出来,函数模板不可以进行隐式类型转换
-    cout << myPlus2(a, c) <<endl; // 10 + 99  普通函数 可以进行隐式类型转换
-}
 
-//2.普通函数和函数模板的调用规则
-template <class T>
-void myPrint(T a, T b)
-{
-    cout << "模板调用的myPrint" << endl;
-}
+    int ret = myCompare(a, b);
 
-template<class T>
-void myPrint(T a, T b ,T c)
-{
-    cout << "模板调用的myPrint(a,b,c)" << endl;
-}
+    cout << "ret = " << ret << endl;
 
-void myPrint(int a, int  b)
-{
-    cout << "普通函数调用 myPrint" << endl;
-}
+    Person p1("Tom", 10);
+    Person p2("Jerry", 10);
 
-//通过模板生成的函数 叫模板函数
-void myPrint(int a, int b, int c)
-{
-    cout << "普通函数调用的myPrint(a,b,c)" << endl;
-}
+    int ret2 = myCompare(p1, p2);
 
-void test02()
-{
-    int a = 10;
-    int b = 20;
-
-    //1 、如果出现重载 优先使用普通函数调用,如果没有实现，出现错误
-    myPrint(a, b);
-
-    //2、 如果想强制调用模板 ，那么可以使用空参数列表
-    myPrint<>(a, b);
-
-    //3、 函数模板可以发生重载
-    int c = 30;
-    myPrint(a, b, c);
-
-    //4、 如果函数模板可以产生更好的匹配，那么优先调用函数模板
-    char c1 = 'c';
-    char d = 'd';
-    myPrint(c1, d);
+    cout << "ret2 = " << ret2 << endl;
 }
 
 int main()
 {
-    //test01();
-    test02();
+    test01();
 
     system("pause");
     return EXIT_SUCCESS;
