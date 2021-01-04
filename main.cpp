@@ -1,15 +1,36 @@
 #include <iostream>
 #include <string>
 using namespace std;
-#include "70_Person.hpp"
 
-//建议 模板不要做分文件编写,写到一个类中即可,
-//类内进行声明和实现，最后把后缀名改为.hpp 约定俗成
+template<class T1 ,class T2>
+class Person
+{
+    //友元函数类内实现
+    friend void printPerson( Person<T1 ,T2> & p )
+    {
+        cout << "姓名：" << p.m_Name << "  年龄： " << p.m_Age << endl;
+    }
+public:
+    Person(T1 name, T2 age)
+    {
+        this->m_Name = name;
+        this->m_Age = age;
+    }
+
+private:
+    T1 m_Name;
+    T2 m_Age;
+};
+
+void test01()
+{
+    Person<string, int> p("Tom", 10);
+    printPerson(p);
+}
 
 int main()
 {
-    Person<string, int>p("猪八戒", 10);
-    p.showPerson();
+    test01();
 
     system("pause");
     return EXIT_SUCCESS;
