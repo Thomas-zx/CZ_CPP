@@ -1,117 +1,97 @@
 #include <iostream>
 using namespace std;
 
-//1.静态转换static_cast
-//基础类型
+class myException //自定义异常类
+{
+public:
+    void printError()
+    {
+        cout << "自定义的异常" << endl;
+    }
+};
+
+class Person
+{
+public:
+    Person()
+    {
+        cout << "Person构造" << endl;
+    }
+    ~Person()
+    {
+        cout << "Person析构" << endl;
+    }
+};
+
+int myDevide(int a ,int b)
+{
+    if (b == 0)
+    {
+        //如果b是异常 抛出异常
+        //return -1;
+
+        //throw 1; //抛出int类型异常
+        //throw 3.14; //抛出double类型异常  异常必须处理，如果不处理 就挂掉
+
+        //throw 'a';
+
+        //栈解旋
+        //从try开始  到 throw 抛出异常之前  所有栈上的对象 都会被释放 这个过程称为栈解旋
+        //构造和析构顺序相反
+        Person p1;
+        Person p2;
+
+        throw myException(); //匿名对象
+    }
+    return a / b;
+}
+
 void test01()
 {
-    char a = 'a';
-    double d = static_cast<double>(a);
-
-    cout << "d = " << d <<endl;
-}
-
-//父子之间转换
-class Base{};
-class Child : public Base{};
-class Other{};
-
-void test02()
-{
-    Base * base = NULL;
-    Child * child = NULL;
-
-    //把base转为 Child*类型 向下 不安全
-    Child * child2 = static_cast<Child*>(base);
-
-    //把child 转为 Base*  向上  安全
-    Base * base2 = static_cast<Base*>(child);
-
-    //转other类型 转换无效
-    //Other * other = static_cast<Other*>(base);
-}
-
-//static_cast使用   static_cast<目标类型>(原始对象)
-
-//2.动态转换dynamic_cast
-void test03()
-{
-    //基础类型不可以转换
-    char c = 'a';
-    //dynamic_cast非常严格，失去精度 或者不安全都不可以转换
-    //double d = dynamic_cast<double>(c);
-}
-
-class Base2
-{
-    virtual void func(){};
-};
-
-class Child2 : public Base2
-{
-    virtual void func(){};
-};
-
-class Other2{};
-
-void test04()
-{
-    Base2 * base = NULL;
-    Child2 * child = NULL;
-
-    //child转Base2 *  安全
-    Base2 * base2 = dynamic_cast<Base2*>(child);
-
-
-    //base 转Child2 * 不安全
-    //Child2 * child2 = dynamic_cast<Child2*>(base);
-
-    //dynamic_cast 如果发生了多态，那么可以让基类转为派生类 ，向下转换
-    Base2 * base3 = new Child2;
-    Child2 * child3 = dynamic_cast<Child2*>(base3);
-}
-
-//3.常量转换(const_cast)
-void test05()
-{
-    const int * p = NULL;
-    //去除const
-    int * newP1 = const_cast<int *>(p);
-
-    int * p2 = NULL;
-    //添加const
-    const int * newP2 = const_cast<const int *>(p2);
-
-    //不能对非指针 或 非引用的 变量进行转换
-    //const int a = 10;
-    //int b = const_cast<int>(a);
-
-    //引用
-    int num = 10;
-    int &numRef = num;
-
-    const int &numRef2 = static_cast<const int &>(numRef);
-}
-
-//4.重新解释转换(reinterpret_cast)
-void test06()
-{
     int a = 10;
-    int * p = reinterpret_cast<int *>(&a);
+    int b = 0;
 
-    cout << "*p=" << *p << endl;
+    //int ret = myDevide(a, b); //早期如果返回-1 无法区分到底是结果还是异常
 
-
-    Base * base = NULL;
-    Other * other = reinterpret_cast<Other*>(base);
-
-    //最不安全 ，不推荐
+    //C++中异常处理
+    try //试一试
+    {
+        myDevide(a, b);
+    }
+    catch (int) //捕获异常
+    {
+        cout << "int类型异常捕获" << endl;
+    }
+    catch (double)
+    {
+        //如果不想处理这个异常 ，可以继续向上抛出
+        cout << "double类型异常捕获" << endl;
+        throw;
+    }
+    catch (myException e)
+    {
+        e.printError();
+    }
+    catch (...)
+    {
+        cout << "其他类型异常捕获" << endl;
+    }
 }
 
 int main()
 {
-    //test01();
-    test06();
+    try
+    {
+        test01();
+    }
+    catch (char ) //如果异常都没有处理，那么成员terminate函数，使程序中断
+    {
+        cout << "main 函数中 double类型异常捕获" << endl;
+    }
+    catch (...)
+    {
+        cout << "main函数中 其他类型异常捕获" << endl;
+    }
 
     system("pause");
     return EXIT_SUCCESS;
