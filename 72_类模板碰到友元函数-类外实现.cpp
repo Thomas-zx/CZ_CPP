@@ -6,18 +6,18 @@
 #include <string>
 using namespace std;
 
-//让编译器提前看到printPerson声明
-
 //让编译器看到Person类声明
 template<class T1, class T2> class Person;
+//让编译器提前看到printPerson声明
 template<class T1, class T2> void printPerson(Person<T1, T2> & p);
 
 template<class T1, class T2>
 class Person
 {
-    //友元函数类内实现  利用空参数列表 告诉编译器 模板函数的声明
+    //利用空参数列表 告诉编译器 模板函数的声明
     friend void printPerson<>(Person<T1, T2> & p); //普通函数 声明
     /*{
+        //友元函数类内实现
         cout << "姓名：" << p.m_Name << "  年龄： " << p.m_Age << endl;
     }*/
 public:

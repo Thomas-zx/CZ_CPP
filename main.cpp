@@ -1,62 +1,117 @@
 #include <iostream>
-#include <string>
-#include "73_MyArray.hpp"
 using namespace std;
 
-//输出int类型数组
-void printIntArray(  MyArray<int>& array)
+//1.静态转换static_cast
+//基础类型
+void test01()
 {
-    for (int i = 0; i < array.getSize();i++)
-    {
-        cout << array[i] << endl;
-    }
+    char a = 'a';
+    double d = static_cast<double>(a);
+
+    cout << "d = " << d <<endl;
 }
 
-class Person
-{
-public:
-    Person(){};
+//父子之间转换
+class Base{};
+class Child : public Base{};
+class Other{};
 
-    Person(string name, int age)
-    {
-        this->m_Name = name;
-        this->m_Age = age;
-    }
-    string m_Name;
-    int m_Age;
+void test02()
+{
+    Base * base = NULL;
+    Child * child = NULL;
+
+    //把base转为 Child*类型 向下 不安全
+    Child * child2 = static_cast<Child*>(base);
+
+    //把child 转为 Base*  向上  安全
+    Base * base2 = static_cast<Base*>(child);
+
+    //转other类型 转换无效
+    //Other * other = static_cast<Other*>(base);
+}
+
+//static_cast使用   static_cast<目标类型>(原始对象)
+
+//2.动态转换dynamic_cast
+void test03()
+{
+    //基础类型不可以转换
+    char c = 'a';
+    //dynamic_cast非常严格，失去精度 或者不安全都不可以转换
+    //double d = dynamic_cast<double>(c);
+}
+
+class Base2
+{
+    virtual void func(){};
 };
 
-//输出Person类型数组
-void printPersonArray( MyArray<Person> & array )
+class Child2 : public Base2
 {
-    for (int  i = 0; i < array.getSize(); i++)
-    {
-        cout << "姓名： " << array[i].m_Name << " 年龄： " << array[i].m_Age << endl;
-    }
+    virtual void func(){};
+};
+
+class Other2{};
+
+void test04()
+{
+    Base2 * base = NULL;
+    Child2 * child = NULL;
+
+    //child转Base2 *  安全
+    Base2 * base2 = dynamic_cast<Base2*>(child);
+
+
+    //base 转Child2 * 不安全
+    //Child2 * child2 = dynamic_cast<Child2*>(base);
+
+    //dynamic_cast 如果发生了多态，那么可以让基类转为派生类 ，向下转换
+    Base2 * base3 = new Child2;
+    Child2 * child3 = dynamic_cast<Child2*>(base3);
+}
+
+//3.常量转换(const_cast)
+void test05()
+{
+    const int * p = NULL;
+    //去除const
+    int * newP1 = const_cast<int *>(p);
+
+    int * p2 = NULL;
+    //添加const
+    const int * newP2 = const_cast<const int *>(p2);
+
+    //不能对非指针 或 非引用的 变量进行转换
+    //const int a = 10;
+    //int b = const_cast<int>(a);
+
+    //引用
+    int num = 10;
+    int &numRef = num;
+
+    const int &numRef2 = static_cast<const int &>(numRef);
+}
+
+//4.重新解释转换(reinterpret_cast)
+void test06()
+{
+    int a = 10;
+    int * p = reinterpret_cast<int *>(&a);
+
+    cout << "*p=" << *p << endl;
+
+
+    Base * base = NULL;
+    Other * other = reinterpret_cast<Other*>(base);
+
+    //最不安全 ，不推荐
 }
 
 int main()
 {
-    MyArray <int >arr(10);
-    for (int i = 0; i < 10;i++)
-    {
-        arr.push_Back(i + 100);
-    }
-
-    printIntArray(arr);
-
-    Person p1("MT", 10);
-    Person p2("呆贼", 12);
-    Person p3("傻馒", 14);
-    Person p4("劣人", 15);
-
-    MyArray<Person>arr2(10);
-    arr2.push_Back(p1);
-    arr2.push_Back(p2);
-    arr2.push_Back(p3);
-    arr2.push_Back(p4);
-
-    printPersonArray(arr2);
+    //test01();
+    test06();
 
     system("pause");
     return EXIT_SUCCESS;
