@@ -1,219 +1,151 @@
 #include <iostream>
-#include <vector>
-#include <list>
+#include <deque>
+#include <algorithm>
 
 using namespace std;
 
-void test01()
-{
-    vector<int> v;
-    for (int i = 0; i < 10; i++) {
-        v.push_back(i);
-        // 自动扩容，v.capacity()容器的容量
-        cout << v.capacity() << endl;
-    }
-}
-
+//deque容器  双端数组  没有容量
 /*
-vector构造函数
-vector<T> v; //采用模板实现类实现，默认构造函数
-vector(v.begin(), v.end());//将v[begin(), end())区间中的元素拷贝给本身。
-vector(n, elem);//构造函数将n个elem拷贝给本身。
-vector(const vector &vec);//拷贝构造函数。
+deque构造函数
+deque<T> deqT;//默认构造形式
+deque(beg, end);//构造函数将[beg, end)区间中的元素拷贝给本身。
+deque(n, elem);//构造函数将n个elem拷贝给本身。
+deque(const deque &deq);//拷贝构造函数。
 
-//例子 使用第二个构造函数 我们可以...
-int arr[] = {2,3,4,1,9};
-vector<int> v1(arr, arr + sizeof(arr) / sizeof(int));
-
-3.2.4.2 vector常用赋值操作
+3.3.3.2 deque赋值操作
 assign(beg, end);//将[beg, end)区间中的数据拷贝赋值给本身。
 assign(n, elem);//将n个elem拷贝赋值给本身。
-vector& operator=(const vector  &vec);//重载等号操作符
-swap(vec);// 将vec与本身的元素互换。
+deque& operator=(const deque &deq); //重载等号操作符
+swap(deq);// 将deq与本身的元素互换
 
-3.2.4.3 vector大小操作
-size();//返回容器中元素的个数
-empty();//判断容器是否为空
-resize(int num);//重新指定容器的长度为num，若容器变长，则以默认值填充新位置。如果容器变短，则末尾超出容器长度的元素被删除。
-resize(int num, elem);//重新指定容器的长度为num，若容器变长，则以elem值填充新位置。如果容器变短，则末尾超出容器长>度的元素被删除。
-capacity();//容器的容量
-reserve(int len);//容器预留len个元素长度，预留位置不初始化，元素不可访问。
+3.3.3.3 deque大小操作
+deque.size();//返回容器中元素的个数
+deque.empty();//判断容器是否为空
+deque.resize(num);//重新指定容器的长度为num,若容器变长，则以默认值填充新位置。如果容器变短，则末尾超出容器长度的元素被删除。
+deque.resize(num, elem); //重新指定容器的长度为num,若容器变长，则以elem值填充新位置,如果容器变短，则末尾超出容器长度的元素被删除。
 */
 
-void printVector(vector<int>&v)
+void printDeque(const deque<int> &d)
 {
-    for (vector<int>::iterator it = v.begin(); it != v.end(); it++) {
+    //iterator 普通迭代器  reverse_iterator 逆序迭代器  const_iterator 只读迭代器
+    for (deque<int>::const_iterator it = d.begin(); it != d.end(); it++) {
+        //*it = 100000;
         cout << *it << " ";
     }
     cout << endl;
 }
 
-void test02()
+void test01()
 {
-    vector<int> v;
-    int array[] = {2, 3, 4, 1, 9};
-    vector<int> v1(array, array + sizeof(array) / sizeof(int));
-    vector<int> v2(v1.begin(), v1.end());
+    deque<int>d;
 
-    printVector(v1);
-    printVector(v2);
+    d.push_back(10);
+    d.push_back(40);
+    d.push_back(30);
+    d.push_back(20);
+    printDeque(d);
 
-    vector<int>v3(10, 100);
-    printVector(v3);
+    deque<int>d2(d.begin(), d.end());
+    d2.push_back(10000);
+    printDeque(d2);
 
-    //赋值使用
-    vector<int> v4;
-    v4.assign(v3.begin(), v3.end());
-    printVector(v4);
+    //交换
+    d.swap(d2);
+    printDeque(d);
+    printDeque(d2);
 
-    v4.swap(v2);
-    cout << "交换后的v2 " << endl;
-    printVector(v2);
-    cout << "交换后的v4 " << endl;
-    printVector(v4);
-
-    if (v4.empty()) {
-        cout << "v4空" << endl;
-    }
-    else {
-        cout << "v4不空" << endl;
-    }
-
-    //v4 2 3 4 1 9
-    v4.resize(10, -1); //第二个参数是默认值 ，默认0
-    printVector(v4);
-
-    v4.resize(3);
-    printVector(v4);
-}
-
-//巧用swap收缩空间
-void test03()
-{
-    vector<int>v;
-    for (int i = 0; i < 100000; i++) {
-        v.push_back(i);
-    }
-
-    cout << "v的容量" << v.capacity() << endl;
-    cout << "v的大小" << v.size() << endl;
-
-    v.resize(3);
-    cout << "v的容量" << v.capacity() << endl;
-    cout << "v的大小" << v.size() << endl;
-
-    //巧用swap
-    vector<int>(v).swap(v);
-    cout << "v的容量" << v.capacity() << endl;
-    cout << "v的大小" << v.size() << endl;
-}
-
-//reserve(int len);//容器预留len个元素长度，预留位置不初始化，元素不可访问。
-void test04()
-{
-    vector<int>v;
-
-    v.reserve(100000); //预留出空间
-
-    int * p = NULL;
-    int num = 0;
-    for (int i = 0; i < 100000; i++)
-    {
-        v.push_back(i);
-        if (p != &v[0])
-        {
-            p = &v[0];
-            num++;
-        }
-    }
-    cout << num << endl;
-    // 开辟100000数据用了多少次
-}
-
-/*
-vector数据存取操作
-at(int idx); //返回索引idx所指的数据，如果idx越界，抛出out_of_range异常。
-operator[];//返回索引idx所指的数据，越界时，运行直接报错
-front();//返回容器中第一个数据元素
-back();//返回容器中最后一个数据元素
-
-3.2.4.5 vector插入和删除操作
-insert(const_iterator pos, int count,ele);//迭代器指向位置pos插入count个元素ele.
-push_back(ele); //尾部插入元素ele
-pop_back();//删除最后一个元素
-erase(const_iterator start, const_iterator end);//删除迭代器从start到end之间的元素
-erase(const_iterator pos);//删除迭代器指向的元素
-clear();//删除容器中所有元素
-*/
-
-void test05()
-{
-    vector<int> v;
-    v.push_back(10);
-    v.push_back(30);
-    v.push_back(20);
-    v.push_back(50);
-
-    cout << "v的front" << v.front() << endl;
-    cout << "v的back" << v.back() << endl;
-
-    //参数1  迭代器   参数2  N个数  参数3 具体插入的内容
-    v.insert(v.begin(), 2, 100);
-    printVector(v);
-
-    v.pop_back(); //尾删
-    printVector(v);
-
-    v.erase(v.begin()); //删除
-    printVector(v);
-
-    //清空所有数据
-    //v.erase(v.begin(), v.end());
-    //v.clear();
-    if (v.empty() )
+    // d2 10 40 30 20
+    if (d2.empty())
     {
         cout << "为空" << endl;
     }
+    else
+    {
+        cout << "不为空 大小为：" << d2.size() << endl;
+    }
 }
 
-void test06()
+/*
+deque双端插入和删除操作
+push_back(elem);//在容器尾部添加一个数据
+push_front(elem);//在容器头部插入一个数据
+pop_back();//删除容器最后一个数据
+pop_front();//删除容器第一个数据
+
+3.3.3.5 deque数据存取
+at(idx);//返回索引idx所指的数据，如果idx越界，抛出out_of_range。
+operator[];//返回索引idx所指的数据，如果idx越界，不抛出异常，直接出错。
+front();//返回第一个数据。
+back();//返回最后一个数据
+3.3.3.6 deque插入操作
+insert(pos,elem);//在pos位置插入一个elem元素的拷贝，返回新数据的位置。
+insert(pos,n,elem);//在pos位置插入n个elem数据，无返回值。
+insert(pos,beg,end);//在pos位置插入[beg,end)区间的数据，无返回值。
+3.3.3.7 deque删除操作
+clear();//移除容器的所有数据
+erase(beg,end);//删除[beg,end)区间的数据，返回下一个数据的位置。
+erase(pos);//删除pos位置的数据，返回下一个数据的位置。
+*/
+
+void test02()
 {
-    //逆序遍历
-    vector<int>v;
-    for (int i = 0; i < 10; i++) {
-        v.push_back(i);
-    }
-    printVector(v);
+    deque<int> d;
 
-    //reverse_iterator 逆序迭代器
-    for (vector<int>::reverse_iterator it = v.rbegin(); it != v.rend(); it++) {
-        cout << *it << " ";
-    }
-    cout << endl;
+    d.push_back(10);
+    d.push_back(30);
+    d.push_back(20);
+    d.push_front(100);
+    d.push_front(200);
 
-    //vector迭代器是随机访问的迭代器  支持跳跃式访问
-    vector<int>::iterator itBegin = v.begin();
-    itBegin += 3;
-    //如果上述写法不报错，这个迭代器是随机访问迭代器
-    cout << *itBegin << " ";
+    printDeque(d); // 200 100 10 30 20
 
-    list<int> l;
-    for (int i = 0; i < 10; i++) {
-        l.push_back(i);
-    }
-    list<int>::iterator lIt = l.begin();
-    //不支持随机访问
-    //lIt += 1;
+    //删除 头删 尾删
+    d.pop_back();
+    printDeque(d); // 200 100 10 30
+    d.pop_front();
+    printDeque(d); // 100 10 30
+
+    //插入
+    deque<int>d2;
+    d2.push_back(50);
+    d2.push_back(60);
+    d2.insert(d2.begin(), d.begin(), d.end());
+    printDeque(d2);  //  100 10 30 50 60
+}
+
+//排序规则
+bool myCompare(int v1, int v2)
+{
+    return v1 > v2; // 100 10
+}
+
+//排序 sort
+void test03()
+{
+    deque<int>d;
+
+    d.push_back(5);
+    d.push_back(15);
+    d.push_back(3);
+    d.push_back(40);
+    d.push_back(7);
+
+    printDeque(d);
+    //排序
+    sort(d.begin(), d.end());
+
+    printDeque(d);
+
+    //从大到小
+    sort(d.begin(), d.end(), myCompare);
+    printDeque(d);
 }
 
 int main(int argc, char *argv[])
 {
     //test01();
     //test02();
-    //test03();
-    //test04();
-    //test05();
-    test06();
+    test03();
 
     system("pause");
     return EXIT_SUCCESS;
