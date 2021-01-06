@@ -1,53 +1,72 @@
 #include <iostream>
-#include <iomanip> //使用控制符的头文件
+//文件读写头文件
+#include <fstream>
 using namespace std;
 
-/*
-cout.put() //向缓冲区写字符
-cout.write() //从buffer中写num个字节到当前输出流中。
-*/
-
+//写文件
 void test01()
 {
-    char buf[1024] = "hello，world";
+    //以输出的方式打开文件
+    //ofstream ofs("./83_test.txt", ios::out | ios::trunc);
 
-	cout.put('a').put('b');
-    cout.write(buf, strlen(buf));
+    //后期指定打开方式
+    ofstream ofs;
+    ofs.open("./83_test.txt", ios::out | ios::trunc);
+
+    //判断是否打开成功
+    if ( !ofs.is_open())
+    {
+        cout << "打开失败" << endl;
+    }
+
+    ofs << "姓名：abc" << endl;
+    ofs << "年龄：100" << endl;
+    ofs << "性别：男" << endl;
+
+    ofs.close();
 }
 
+//读文件
 void test02()
 {
-    //通过流成员函数
-    int number = 99;
-    cout.width(20);
-    cout.fill('*');
-    cout.setf(ios::left);   //设置格式  输入内容做对齐
-    cout.unsetf(ios::dec);  //卸载十进制
-    cout.setf(ios::hex);    //安装16进制
-    cout.setf(ios::showbase);  // 强制输出整数基数  0  0x
-    //cout.unsetf(ios::hex);
-    //cout.setf(ios::oct);
-    cout << number << endl;
-}
+    ifstream ifs;
+    ifs.open("./83_test.txt", ios::in);
 
-//控制符的方式显示
-void test03()
-{
-    int number = 99;
-    cout << setw(20)
-         << setfill('~')
-         << setiosflags(ios::showbase) //基数
-         << setiosflags(ios::left) //左对齐
-         << hex // 十六进制
-         << number
-         << endl;
+    //判断是否打开成功
+    if (!ifs.is_open())
+    {
+        cout << "打开失败" << endl;
+    }
+
+    //第一种方式
+    char buf[1024];
+    while (ifs >>buf) //按行读取
+    {
+    	cout << buf << endl;
+    }
+
+    //第二种方式
+    //char buf2[1024];
+    //while (!ifs.eof()) //eof读到文件尾
+    //{
+    //	ifs.getline(buf2, sizeof(buf2));
+    //	cout << buf2 << endl;
+    //}
+
+    //第三种 不推荐 按单个字符读取
+    //char c;
+    //while (  (c = ifs.get() ) != EOF) // EOF文件尾
+    //{
+    //    cout << c;
+    //}
+
+    ifs.close();
 }
 
 int main()
 {
     //test01();
-    //test02();
-    test03();
+    test02();
 
     system("pause");
     return EXIT_SUCCESS;
