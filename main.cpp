@@ -1,43 +1,46 @@
 #include <iostream>
-#include <stack>
+#include <queue>
 
 using namespace std;
 
-//stack栈容器 先进后出
+//queue 队列容器	先进先出
 
 /*
-stack构造函数
-stack<T> stkT;//stack采用模板类实现， stack对象的默认构造形式：
-stack(const stack &stk);//拷贝构造函数
-3.4.3.2 stack赋值操作
-stack& operator=(const stack &stk);//重载等号操作符
-3.4.3.3 stack数据存取操作
-push(elem);//向栈顶添加元素
-pop();//从栈顶移除第一个元素
-top();//返回栈顶元素
-3.4.3.4 stack大小操作
-empty();//判断堆栈是否为空
-size();//返回堆栈的大小
+queue构造函数
+queue<T> queT;//queue采用模板类实现，queue对象的默认构造形式：
+queue(const queue &que);//拷贝构造函数
+3.5.3.2 queue存取、插入和删除操作
+push(elem);//往队尾添加元素
+pop();//从队头移除第一个元素
+back();//返回最后一个元素
+front();//返回第一个元素
+
+3.5.3.3 queue赋值操作
+queue& operator=(const queue &que);//重载等号操作符
+3.5.3.4 queue大小操作
+empty();//判断队列是否为空
+size();//返回队列的大小
 */
 
 void test01()
 {
-    stack<int>s;
+    queue<int>q;
 
-    //放入数据 push
-    s.push(10);
-    s.push(30);
-    s.push(20);
-    s.push(40);
+    q.push(10);  //往队尾添加元素
+    q.push(20);
+    q.push(30);
+    q.push(40);
 
-    while (s.size() != 0)
+    while (!q.empty())
     {
-        cout << "栈顶为 " << s.top() << endl;  //40  20  30  10
-        //弹出栈顶元素
-        s.pop();
+        //  10 40  20 40  30  40  40  40
+        cout << "队头: " << q.front() << endl;
+        cout << "队尾: " << q.back() << endl;
+        //弹出队头元素
+        q.pop();
     }
 
-    cout << "size = " << s.size() << endl;
+    cout << "size : " << q.size() << endl;
 }
 
 int main(int argc, char *argv[])
