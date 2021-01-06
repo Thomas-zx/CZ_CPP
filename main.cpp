@@ -1,275 +1,262 @@
 #include <iostream>
-#include <list>
-#include <algorithm>
 #include <string>
+//set  multiset头文件
+#include <set>
 
 using namespace std;
 
-//list 双向循环链表
-//list常用API
+//set容器 关联式容器 插入数据自动排序 按照key
 /*
-list构造函数
-list<T> lstT;//list采用采用模板类实现,对象的默认构造形式：
-list(beg,end);//构造函数将[beg, end)区间中的元素拷贝给本身。
-list(n,elem);//构造函数将n个elem拷贝给本身。
-list(const list &lst);//拷贝构造函数。
-3.6.4.2 list数据元素插入和删除操作
-push_back(elem);//在容器尾部加入一个元素
-pop_back();//删除容器中最后一个元素
-push_front(elem);//在容器开头插入一个元素
-pop_front();//从容器开头移除第一个元素
-insert(pos,elem);//在pos位置插elem元素的拷贝，返回新数据的位置。
-insert(pos,n,elem);//在pos位置插入n个elem数据，无返回值。
-insert(pos,beg,end);//在pos位置插入[beg,end)区间的数据，无返回值。
-clear();//移除容器的所有数据
-erase(beg,end);//删除[beg,end)区间的数据，返回下一个数据的位置。
-erase(pos);//删除pos位置的数据，返回下一个数据的位置。
-remove(elem);//删除容器中所有与elem值匹配的元素。
+set构造函数
+set<T> st;//set默认构造函数：
+mulitset<T> mst; //multiset默认构造函数:
+set(const set &st);//拷贝构造函数
+3.7.2.2 set赋值操作
+set& operator=(const set &st);//重载等号操作符
+swap(st);//交换两个集合容器
+3.7.2.3 set大小操作
+size();//返回容器中元素的数目
+empty();//判断容器是否为空
+
+3.7.2.4 set插入和删除操作
+insert(elem);//在容器中插入元素。
+clear();//清除所有元素
+erase(pos);//删除pos迭代器所指的元素，返回下一个元素的迭代器。
+erase(beg, end);//删除区间[beg,end)的所有元素 ，返回下一个元素的迭代器。
+erase(elem);//删除容器中值为elem的元素。
 */
+
+void printSet( set<int>& s)
+{
+    for (set<int>::iterator it = s.begin(); it != s.end();it++)
+    {
+        cout << *it << " ";
+    }
+    cout << endl;
+}
 
 void test01()
 {
-    list<int> myList;
-    for (int i = 0; i < 10; i++){
-        myList.push_back(i);
-    }
+    set<int>s1;
 
-    //list<int>::_Nodeptr node = myList._Myhead->_Next;
-    //for ( int i = 0; i < myList._Mysize * 2; i++){
-    //    cout << "Node:" << node->_Myval << endl;
-    //    node = node->_Next;
-    //    if (node == myList._Myhead){
-    //        node = node->_Next;
-    //    }
-    //}
-}
+    //关联式容器 key进行排序，从小到大
+    s1.insert(5);
+    s1.insert(1);
+    s1.insert(9);
+    s1.insert(3);
+    s1.insert(7);
+    printSet(s1);
 
-void printList(list<int>&L)
-{
-    for (list<int>::iterator it = L.begin(); it != L.end();it++)
+    if (s1.empty())
     {
-        cout << *it << " ";
-    }
-    cout << endl;
-}
-
-void test02()
-{
-    list<int>L(10,10);
-    list<int>L2(L.begin(), L.end());
-
-    printList(L);
-    printList(L2);
-    L2.push_back(100);
-
-    //逆序打印
-    for (list<int>::reverse_iterator it = L2.rbegin(); it != L2.rend();it++)
-    {
-        cout << *it << " ";
-    }
-    cout << endl;
-
-    //list迭代器不支持随机访问
-    list<int>::iterator itBegin = L2.begin();
-    //itBegin = itBegin + 1;
-
-    //插入数据
-    list<int>L3;
-    L3.push_back(10);
-    L3.push_back(30);
-    L3.push_back(20);
-    L3.push_front(100);
-    L3.push_front(300);
-    L3.push_front(200);
-
-    printList(L3); //  200 300 100 10 30 20
-
-    //删除两端数据
-    L3.pop_front(); //头删
-    L3.pop_back(); //尾删
-    printList(L3); // 300 100 10 30
-
-    L3.insert(L3.begin(), 1000);
-    printList(L3); // 1000 300 100 10 30
-
-    //remove(elem);//删除容器中所有与elem值匹配的元素。
-    L3.push_back(10);// 1000 300 100 10 30 10
-    L3.remove(10); //参数 直接放值
-
-    printList(L3);//1000 300 100  30
-}
-
-/*
-list大小操作
-size();//返回容器中元素的个数
-empty();//判断容器是否为空
-resize(num);//重新指定容器的长度为num，
-若容器变长，则以默认值填充新位置。
-如果容器变短，则末尾超出容器长度的元素被删除。
-resize(num, elem);//重新指定容器的长度为num，
-若容器变长，则以elem值填充新位置。
-如果容器变短，则末尾超出容器长度的元素被删除。
-
-3.6.4.4 list赋值操作
-assign(beg, end);//将[beg, end)区间中的数据拷贝赋值给本身。
-assign(n, elem);//将n个elem拷贝赋值给本身。
-list& operator=(const list &lst);//重载等号操作符
-swap(lst);//将lst与本身的元素互换。
-3.6.4.5 list数据的存取
-front();//返回第一个元素。
-back();//返回最后一个元素。
-*/
-
-void test03()
-{
-    list<int>L3;
-
-    L3.push_back(10);
-    L3.push_back(30);
-    L3.push_back(20);
-    L3.push_front(100);
-    L3.push_front(300);
-    L3.push_front(200);
-
-    cout << "大小：" << L3.size() << endl;
-    if (L3.empty())
-    {
-        cout << "L3为空" << endl;
+        cout << "空" << endl;
     }
     else
     {
-        cout << "L3不为空" << endl;
+        cout << "size = " << s1.size() << endl;
     }
 
-    L3.resize(10);
-    printList(L3);
-
-    L3.resize(3);
-    printList(L3);
-
-    list<int> L4;
-    L4.assign(L3.begin(), L3.end());
-
-    //200 300 100
-    cout << "front: " << L4.front() << endl;
-    cout << "back: " << L4.back() << endl;
+    s1.erase(s1.begin());  // 3 5 7 9
+    printSet(s1);
+    s1.erase(5);  //  3 7 9
+    printSet(s1);
 }
 
 /*
-list反转排序
-reverse();//反转链表，比如lst包含1,3,5元素，运行此方法后，lst就包含5,3,1元素。
-sort(); //list排序
+set查找操作
+find(key);//查找键key是否存在,若存在，返回该键的元素的迭代器；若不存在，返回set.end();
+count(key);//查找键key的元素个数
+lower_bound(keyElem);//返回第一个key>=keyElem元素的迭代器。
+upper_bound(keyElem);//返回第一个key>keyElem元素的迭代器。
+equal_range(keyElem);//返回容器中key与keyElem相等的上下限的两个迭代器。
 */
 
-bool myCompare(int v1, int v2)
+void test02()
 {
-    return v1 > v2; //降序
+    set<int>s1;
+
+    s1.insert(5);
+    s1.insert(1);
+    s1.insert(9);
+    s1.insert(3);
+    s1.insert(7);
+
+    //对于set 没有value  key就是value
+    set<int>::iterator pos = s1.find(2);
+
+    //判断是否找到
+    if (pos != s1.end())
+    {
+        cout << "找到了：值为：" << *pos << endl;
+    }
+    else
+    {
+        cout << "未找到" << endl;
+    }
+
+    //count(key);//查找键key的元素个数 set而言 结果 0或者1
+    int num =  s1.count(2);
+    cout <<  "2的个数为： " << num << endl;
+
+    //lower_bound(keyElem);//返回第一个key >= keyElem元素的迭代器。
+    set<int>::iterator it =  s1.lower_bound(3); // 10就是未找到
+    if (it!= s1.end())
+    {
+        cout << "找到了 lower_bound (3)的值为：" << *it << endl;
+    }
+    else
+    {
+        cout << "未找到" << endl;
+    }
+    // upper_bound(keyElem);//返回第一个key>keyElem元素的迭代器。
+    set<int>::iterator it2 = s1.upper_bound(3);
+    if (it2 != s1.end())
+    {
+        cout << "找到了 upper_bound (3)的值为：" << *it2 << endl;
+    }
+    else
+    {
+        cout << "未找到" << endl;
+    }
+
+    //equal_range(keyElem);//返回容器中key与keyElem相等的上下限的两个迭代器。
+    //上下限 就是lower_bound   upper_bound
+    pair<set<int>::iterator, set<int>::iterator>  ret =  s1.equal_range(3);
+    //获取第一个值
+
+    if (ret.first != s1.end())
+    {
+        cout << "找到equal_range中 lower_bound 的值 ：" << *(ret.first) << endl;
+    }
+    else
+    {
+        cout << "未找到" << endl;
+    }
+
+    //获取第二个值
+    if (ret.second != s1.end())
+    {
+        cout << "找到equal_range中 upper_bound 的值 ：" << *(ret.second) << endl;
+    }
+    else
+    {
+        cout << "未找到" << endl;
+    }
 }
 
+//set容器 不允许插入重复的键值
+void test03()
+{
+    set<int> s1;
+
+    pair<set<int>::iterator, bool> ret = s1.insert(10);
+    if (ret.second)
+    {
+        cout << "插入成功" << endl;
+    }
+    else
+    {
+        cout << "插入失败" << endl;
+    }
+
+    ret = s1.insert(10);
+    if (ret.second)
+    {
+        cout << "第二次插入成功" << endl;
+    }
+    else
+    {
+        cout << "第二次插入失败" << endl;
+    }
+
+    printSet(s1);
+
+    //multiset允许插入重复值
+    multiset<int> mul;
+    mul.insert(10);
+    mul.insert(10);
+}
+
+//指定set排序规则 从大到小
+//仿函数
+class myCompare
+{
+public:
+    //重载 ()
+    bool operator()(int v1 ,int v2)
+    {
+        return v1 > v2;
+    }
+};
+
+//set容器排序
 void test04()
 {
-    list<int>L;
+    set<int,myCompare>s1;
 
-    L.push_back(10);
-    L.push_back(20);
-    L.push_back(40);
-    L.push_back(30);
+    s1.insert(5);
+    s1.insert(1);
+    s1.insert(9);
+    s1.insert(3);
+    s1.insert(7);
 
-    printList(L); // 10 20 40 30
-    L.reverse();
-    printList(L); // 30 40 20 10
+    //printSet(s1);
 
-    //所有不支持随机访问的迭代器 不可以用系统提供的算法
-    // 如果不支持用系统提供算法，那么这个类内部会提供
-    //sort(L.begin(), L.end());
-    L.sort(); //从小到大
-    printList(L);
-
-    //从大到小
-    L.sort(myCompare);
-    printList(L);
+    //从大到小排序
+    //在插入之前就指定排序规则
+    for (set<int, myCompare>::iterator it = s1.begin(); it != s1.end();it++)
+    {
+        cout << *it << " ";
+    }
+    cout << endl;
 }
 
 //自定义数据类型
 class Person
 {
 public:
-    Person(string name, int age,int height)
+    Person(string name, int age)
     {
         this->m_Name = name;
         this->m_Age = age;
-        this->m_Height = height;
     }
 
     string m_Name;
     int m_Age;
-    int m_Height; //身高
 };
 
-//重载 == 让remove 可以删除自定义的person类型
-bool operator==(const  Person & p1, const  Person & p2)
+class myComparePerson
 {
-    if (p1.m_Name == p2.m_Name && p1.m_Age == p2.m_Age && p1.m_Height == p2.m_Height)
+public:
+    bool operator()(const Person & p1, const Person & p2)
     {
-        return true;
+        if (p1.m_Age > p2.m_Age) //降序
+        {
+            return true;
+        }
+        return false;
     }
-    return false;
-}
-
-//Person排序规则 如果年龄 相同  按照身高的升序排序
-bool myComparePerson( Person & p1,Person & p2 )
-{
-    //if (p1.m_Age > p2.m_Age)
-    //{
-    //	return true;
-    //}
-    //return false;
-
-    if (p1.m_Age == p2.m_Age)
-    {
-        return p1.m_Height < p2.m_Height;
-    }
-    else
-    {
-        return p1.m_Age > p2.m_Age;
-    }
-}
+};
 
 void test05()
 {
-    list<Person> L;
+    set<Person, myComparePerson> s1;
 
-    Person p1("亚瑟", 10 , 165);
-    Person p2("德玛西亚", 20 , 170);
-    Person p3("火枪", 17,177);
-    Person p4("德雷福斯", 19, 120);
-    Person p5("MT", 18,200);
-    Person p6("狗蛋", 18, 166);
-    Person p7("狗剩", 18, 210);
+    Person p1("大娃", 100);
+    Person p2("二娃", 90);
+    Person p3("六娃", 10);
+    Person p4("爷爷", 1000);
 
-    L.push_back(p1);
-    L.push_back(p2);
-    L.push_back(p3);
-    L.push_back(p4);
-    L.push_back(p5);
-    L.push_back(p6);
-    L.push_back(p7);
+    s1.insert(p1);
+    s1.insert(p2);
+    s1.insert(p3);
+    s1.insert(p4);
 
-    //需求 打印数据时候 按照年龄的降序 输出
-    //对于自定义数据类型 ，必须要指定排序规则
-    L.sort(myComparePerson);
-    for (list<Person>::iterator it = L.begin(); it != L.end();it++)
+    //插入自定义数据类型，上来就指定好排序规则
+    //显示
+    for (set<Person, myComparePerson>::iterator it = s1.begin(); it != s1.end();it++)
     {
-        cout << "姓名： " << it->m_Name << " 年龄： " << it->m_Age << " 身高："<< it->m_Height<< endl;
-    }
-
-    //删除 狗蛋
-    cout << " -------------------- " << endl;
-
-    L.remove(p6);
-    for (list<Person>::iterator it = L.begin(); it != L.end(); it++)
-    {
-        cout << "姓名： " << it->m_Name << " 年龄： " << it->m_Age << " 身高：" << it->m_Height << endl;
+        cout << "姓名：" << (*it).m_Name << " 年龄： " << it->m_Age << endl;
     }
 }
 
