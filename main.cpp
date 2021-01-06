@@ -1,25 +1,57 @@
 #include <iostream>
 using namespace std;
 
-void func() throw(int, char, double)
+//异常基类
+class BaseException
 {
-    //throw 1;
-    //throw 'e';
-    throw 3.14;
-    //throw "err";  //定义中没有const char *, throw后catch不到
+public:
+    virtual void printError()
+    {
+    }
+};
+
+class NullPointerException:public BaseException
+{
+public:
+    virtual void printError()
+    {
+        cout << "空指针异常" << endl;
+    }
+};
+
+class OutofRangeException:public BaseException
+{
+public:
+    virtual void printError()
+    {
+        cout << "越界异常" << endl;
+    }
+
+};
+
+void doWork()
+{
+    //throw NullPointerException();
+
+    throw OutofRangeException();
 }
 
-int main(int argc, char *argv[])
+void test01()
 {
-    try {
-        func();
-    }catch (int) {
-        cout << "int类型异常捕获" << endl;
-    }catch (const char *str) {
-        cout << "char *类型异常捕获" << endl;
-    }catch (...) {
-        cout << "其他类型异常捕获" << endl;
+    try
+    {
+        doWork();
     }
+    catch (BaseException & e)
+    {
+        e.printError();
+    }
+
+}
+
+int main()
+{
+    test01();
 
     system("pause");
     return EXIT_SUCCESS;

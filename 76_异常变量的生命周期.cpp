@@ -34,6 +34,7 @@ public:
 
 void doWork()
 {
+    //throw new MyException();  //2.需要手动释放
     MyException e;
 
     throw &e;
@@ -45,15 +46,14 @@ void test01()
     {
         doWork();
     }
-    catch (MyException *e) //MyException e，会多开销一份数据
+    catch (MyException *e) //1.MyException e，会多开销一份数据
     {
-        e->printError();
-        e->printError();
-        e->printError(); //指向非法内存空间，不应该这么做
-
         cout << "捕获异常" << endl;
-
         //delete e; //靠自觉 释放对象
+
+        //e->printError();
+        //e->printError();
+        //e->printError(); //指向非法内存空间，不应该这么做
     }
 }
 
