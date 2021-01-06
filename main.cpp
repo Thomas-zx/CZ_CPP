@@ -1,61 +1,25 @@
 #include <iostream>
 using namespace std;
 
-class MyException
+void func() throw(int, char, double)
 {
-public:
-    MyException()
-    {
-        cout << "MyException的默认构造" << endl;
-    }
-
-    MyException(const MyException & e)
-    {
-        cout << "MyException的拷贝构造" << endl;
-    }
-
-    ~MyException()
-    {
-        cout << "MyException的析构调用" << endl;
-    }
-
-    void printError()
-    {
-        this->m_A = 100;
-        cout << "error："  << m_A<< endl;
-    }
-
-    int m_A;
-};
-
-void doWork()
-{
-    MyException e;
-
-    throw &e;
+    //throw 1;
+    //throw 'e';
+    throw 3.14;
+    //throw "err";  //定义中没有const char *, throw后catch不到
 }
 
-void test01()
+int main(int argc, char *argv[])
 {
-    try
-    {
-        doWork();
+    try {
+        func();
+    }catch (int) {
+        cout << "int类型异常捕获" << endl;
+    }catch (const char *str) {
+        cout << "char *类型异常捕获" << endl;
+    }catch (...) {
+        cout << "其他类型异常捕获" << endl;
     }
-    catch (MyException *e) //MyException e，会多开销一份数据
-    {
-        e->printError();
-        e->printError();
-        e->printError(); //指向非法内存空间，不应该这么做
-
-        cout << "捕获异常" << endl;
-
-        //delete e; //靠自觉 释放对象
-    }
-}
-
-int main()
-{
-    test01();
 
     system("pause");
     return EXIT_SUCCESS;
