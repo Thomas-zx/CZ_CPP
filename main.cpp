@@ -1,266 +1,209 @@
 #include <iostream>
-#include <string>
-#include <stdexcept>
+#include <vector>
+#include <list>
 
 using namespace std;
-/*
-string 构造函数
-string();//创建一个空的字符串 例如: string str;
-string(const string& str);//使用一个string对象初始化另一个string对象
-string(const char* s);//使用字符串s初始化
-string(int n, char c);//使用n个字符c初始化
-
-3.1.2.2 string基本赋值操作
-string& operator=(const char* s);//char*类型字符串 赋值给当前的字符串
-string& operator=(const string &s);//把字符串s赋给当前的字符串
-string& operator=(char c);//字符赋值给当前的字符串
-string& assign(const char *s);//把字符串s赋给当前的字符串
-string& assign(const char *s, int n);//把字符串s的前n个字符赋给当前的字符串
-string& assign(const string &s);//把字符串s赋给当前字符串
-string& assign(int n, char c);//用n个字符c赋给当前字符串
-string& assign(const string &s, int start, int n);//将s从start开始n个字符赋值给字符串
-*/
 
 void test01()
 {
-    string str;  //默认构造
-    string str2(str);  //拷贝构造
-    string str3  = str;
-    string str4 = "abcd";
-    string str5(10, 'a');
-
-    cout << str4 << endl;
-    cout << str5 << endl;
-
-    //基本赋值
-    str = "hello";
-    str2 = str4;
-
-    //string& assign(const char *s, int n);//把字符串s的前n个字符赋给当前的字符串
-    str3.assign("abcdef", 4);
-    cout << str3 << endl;
-
-    //string& assign(const string &s, int start, int n);//将s从start开始n个字符赋值给字符串
-    string str6;
-    str6.assign(str, 1, 3);  //ell ? hel 从0索引
-    cout << str6 << endl;
+    vector<int> v;
+    for (int i = 0; i < 10; i++) {
+        v.push_back(i);
+        // 自动扩容，v.capacity()容器的容量
+        cout << v.capacity() << endl;
+    }
 }
 
 /*
-string存取字符操作
-char& operator[](int n);//通过[]方式取字符
-char& at(int n);//通过at方法获取字符
+vector构造函数
+vector<T> v; //采用模板实现类实现，默认构造函数
+vector(v.begin(), v.end());//将v[begin(), end())区间中的元素拷贝给本身。
+vector(n, elem);//构造函数将n个elem拷贝给本身。
+vector(const vector &vec);//拷贝构造函数。
+
+//例子 使用第二个构造函数 我们可以...
+int arr[] = {2,3,4,1,9};
+vector<int> v1(arr, arr + sizeof(arr) / sizeof(int));
+
+3.2.4.2 vector常用赋值操作
+assign(beg, end);//将[beg, end)区间中的数据拷贝赋值给本身。
+assign(n, elem);//将n个elem拷贝赋值给本身。
+vector& operator=(const vector  &vec);//重载等号操作符
+swap(vec);// 将vec与本身的元素互换。
+
+3.2.4.3 vector大小操作
+size();//返回容器中元素的个数
+empty();//判断容器是否为空
+resize(int num);//重新指定容器的长度为num，若容器变长，则以默认值填充新位置。如果容器变短，则末尾超出容器长度的元素被删除。
+resize(int num, elem);//重新指定容器的长度为num，若容器变长，则以elem值填充新位置。如果容器变短，则末尾超出容器长>度的元素被删除。
+capacity();//容器的容量
+reserve(int len);//容器预留len个元素长度，预留位置不初始化，元素不可访问。
 */
+
+void printVector(vector<int>&v)
+{
+    for (vector<int>::iterator it = v.begin(); it != v.end(); it++) {
+        cout << *it << " ";
+    }
+    cout << endl;
+}
+
 void test02()
 {
-    string s = "hello world";
+    vector<int> v;
+    int array[] = {2, 3, 4, 1, 9};
+    vector<int> v1(array, array + sizeof(array) / sizeof(int));
+    vector<int> v2(v1.begin(), v1.end());
 
-    for (int i = 0; i < s.size(); i++) {
-        //cout << s[i] << endl;
-        //[] 和at区别？[]访问越界 直接挂掉 at会抛出异常
-        //cout << s.at(i) << endl;
+    printVector(v1);
+    printVector(v2);
+
+    vector<int>v3(10, 100);
+    printVector(v3);
+
+    //赋值使用
+    vector<int> v4;
+    v4.assign(v3.begin(), v3.end());
+    printVector(v4);
+
+    v4.swap(v2);
+    cout << "交换后的v2 " << endl;
+    printVector(v2);
+    cout << "交换后的v4 " << endl;
+    printVector(v4);
+
+    if (v4.empty()) {
+        cout << "v4空" << endl;
+    }
+    else {
+        cout << "v4不空" << endl;
     }
 
-    try
-    {
-        //cout << s[100] << endl;
-        cout << s.at(1000) << endl;
-    }
-    catch (out_of_range & e)
-    {
-        cout << e.what() << endl;
-    }
-    catch (...)
-    {
-        cout << "越界异常" << endl;
-    }
+    //v4 2 3 4 1 9
+    v4.resize(10, -1); //第二个参数是默认值 ，默认0
+    printVector(v4);
+
+    v4.resize(3);
+    printVector(v4);
 }
 
-/*
-string拼接操作
-string& operator+=(const string& str);//重载+=操作符
-string& operator+=(const char* str);//重载+=操作符
-string& operator+=(const char c);//重载+=操作符
-string& append(const char *s);//把字符串s连接到当前字符串结尾
-string& append(const char *s, int n);//把字符串s的前n个字符连接到当前字符串结尾
-string& append(const string &s);//同operator+=()
-string& append(const string &s, int pos, int n);//把字符串s中从pos开始的n个字符连接到当前字符串结尾
-string& append(int n, char c);//在当前字符串结尾添加n个字符c
-
-3.1.2.5 string查找和替换
-int find(const string& str, int pos = 0) const; //查找str第一次出现位置,从pos开始查找
-int find(const char* s, int pos = 0) const;  //查找s第一次出现位置,从pos开始查找
-int find(const char* s, int pos, int n) const;  //从pos位置查找s的前n个字符第一次位置
-int find(const char c, int pos = 0) const;  //查找字符c第一次出现位置
-int rfind(const string& str, int pos = npos) const;//查找str最后一次位置,从pos开始查找
-int rfind(const char* s, int pos = npos) const;//查找s最后一次出现位置,从pos开始查找
-int rfind(const char* s, int pos, int n) const;//从pos查找s的前n个字符最后一次位置
-int rfind(const char c, int pos = 0) const; //查找字符c最后一次出现位置
-string& replace(int pos, int n, const string& str); //替换从pos开始n个字符为字符串str
-string& replace(int pos, int n, const char* s); //替换从pos开始的n个字符为字符串s
-*/
-
+//巧用swap收缩空间
 void test03()
 {
-    //拼接
-    string s1 = "我";
-    string s2 = "爱北京";
+    vector<int>v;
+    for (int i = 0; i < 100000; i++) {
+        v.push_back(i);
+    }
 
-    s1 += s2;
-    cout << s1 << endl;
+    cout << "v的容量" << v.capacity() << endl;
+    cout << "v的大小" << v.size() << endl;
 
-    s1.append("天安门");
-    cout << s1 << endl;
+    v.resize(3);
+    cout << "v的容量" << v.capacity() << endl;
+    cout << "v的大小" << v.size() << endl;
 
-    //find查找
-    string s = "abcdefg";
-    int pos = s.find("bcd");  //找不到返回是 -1
-    cout << "pos = " << pos << endl;
-
-    int pos2 = s.rfind("bc"); //rfind  和find 结果一样，内部查找顺序相反
-    cout << "pos2 = " << pos2 << endl; // 4 2
-
-    //替换
-    string s3 = "hello"; //替换从pos开始n个字符为字符串str
-    s3.replace(1, 3, "1111");
-    cout << s3 << endl; // h1111o
+    //巧用swap
+    vector<int>(v).swap(v);
+    cout << "v的容量" << v.capacity() << endl;
+    cout << "v的大小" << v.size() << endl;
 }
 
-/*
-string比较操作
-
-compare函数在>时返回 1，<时返回 -1，==时返回 0。
-比较区分大小写，比较时参考字典顺序，排越前面的越小。
-大写的A比小写的a小。
-
-int compare(const string &s) const;//与字符串s比较
-int compare(const char *s) const;//与字符串s比较
-*/
-
+//reserve(int len);//容器预留len个元素长度，预留位置不初始化，元素不可访问。
 void test04()
 {
-    string s1 = "abc";
-    string s2 = "abcd";
+    vector<int>v;
 
-    if (s1.compare(s2) == 0)
+    v.reserve(100000); //预留出空间
+
+    int * p = NULL;
+    int num = 0;
+    for (int i = 0; i < 100000; i++)
     {
-        cout << "s1 等于 s2" << endl;
+        v.push_back(i);
+        if (p != &v[0])
+        {
+            p = &v[0];
+            num++;
+        }
     }
-    else if (s1.compare(s2) == 1)
-    {
-        cout << "s1 大于 s2" << endl;
-    }
-    else
-    {
-        cout << "s1 小于 s2" << endl;
-    }
+    cout << num << endl;
+    // 开辟100000数据用了多少次
 }
 
 /*
-string子串
-string substr(int pos = 0, int n = npos) const;//返回由pos开始的n个字符组成的字符串
+vector数据存取操作
+at(int idx); //返回索引idx所指的数据，如果idx越界，抛出out_of_range异常。
+operator[];//返回索引idx所指的数据，越界时，运行直接报错
+front();//返回容器中第一个数据元素
+back();//返回容器中最后一个数据元素
+
+3.2.4.5 vector插入和删除操作
+insert(const_iterator pos, int count,ele);//迭代器指向位置pos插入count个元素ele.
+push_back(ele); //尾部插入元素ele
+pop_back();//删除最后一个元素
+erase(const_iterator start, const_iterator end);//删除迭代器从start到end之间的元素
+erase(const_iterator pos);//删除迭代器指向的元素
+clear();//删除容器中所有元素
 */
 
 void test05()
 {
-    string s1 = "abcde";
+    vector<int> v;
+    v.push_back(10);
+    v.push_back(30);
+    v.push_back(20);
+    v.push_back(50);
 
-    string s2 = s1.substr(1, 3);
-    cout << "s2 = " << s2 << endl;
+    cout << "v的front" << v.front() << endl;
+    cout << "v的back" << v.back() << endl;
 
-    //需求  查找一个右键的 用户名
-    string email = "zhangtao@sina.com";
+    //参数1  迭代器   参数2  N个数  参数3 具体插入的内容
+    v.insert(v.begin(), 2, 100);
+    printVector(v);
 
-    int pos = email.find("@");  //8
-    cout << "pos " << pos << endl;
+    v.pop_back(); //尾删
+    printVector(v);
 
-    string usrName = email.substr(0, pos);
-    cout << "用户名为：" << usrName << endl;
+    v.erase(v.begin()); //删除
+    printVector(v);
+
+    //清空所有数据
+    //v.erase(v.begin(), v.end());
+    //v.clear();
+    if (v.empty() )
+    {
+        cout << "为空" << endl;
+    }
 }
-
-/*
-string插入和删除操作
-string& insert(int pos, const char* s); //插入字符串
-string& insert(int pos, const string& str); //插入字符串
-string& insert(int pos, int n, char c);//在指定位置插入n个字符c
-string& erase(int pos, int n = npos);//删除从Pos开始的n个字符
-*/
 
 void test06()
 {
-    string s1 = "hello";
-    s1.insert(1, "111");
-    cout << s1 << endl; //h111ello
-
-    //删除 111
-    s1.erase(1, 3);
-    cout << s1 << endl;
-}
-
-/*
-string和c-style字符串转换
-*/
-void func(string s)
-{
-    cout << s << endl;
-}
-
-void func2(const char * s)
-{
-    cout << s << endl;
-}
-
-void test07()
-{
-    string s = "abc";
-    //string -> const char *
-
-    const char * p = s.c_str();
-
-    func(p);  //const char * 隐式类型转换为 string
-
-    //const char * -> string
-
-    string s2(p);
-    //func2(s2);  //string 不能隐式类型转换为 char *
-}
-
-void test08()
-{
-    string s = "abcdefg";
-    char& a = s[2];
-    char& b = s[3];
-
-    a = '1';
-    b = '2';
-
-    cout << s << endl;
-    cout << (int*)s.c_str() << endl;
-
-    s = "pppppppppppppp";
-
-    a = '1';
-    b = '2';
-
-    cout << s << endl;
-    cout << (int*)s.c_str() << endl;
-}
-
-/*
-写一个函数，函数内部将string字符串中的所有小写字母都变为大写字母。
-*/
-void test09()
-{
-    string s = "abCdEfg";
-
-    for (int i = 0; i < s.size(); i++)
-    {
-        //s[i] = toupper(s[i]);
-        //全变小写
-        s[i] = tolower(s[i]);
+    //逆序遍历
+    vector<int>v;
+    for (int i = 0; i < 10; i++) {
+        v.push_back(i);
     }
+    printVector(v);
 
-    cout << s << endl;
+    //reverse_iterator 逆序迭代器
+    for (vector<int>::reverse_iterator it = v.rbegin(); it != v.rend(); it++) {
+        cout << *it << " ";
+    }
+    cout << endl;
+
+    //vector迭代器是随机访问的迭代器  支持跳跃式访问
+    vector<int>::iterator itBegin = v.begin();
+    itBegin += 3;
+    //如果上述写法不报错，这个迭代器是随机访问迭代器
+    cout << *itBegin << " ";
+
+    list<int> l;
+    for (int i = 0; i < 10; i++) {
+        l.push_back(i);
+    }
+    list<int>::iterator lIt = l.begin();
+    //不支持随机访问
+    //lIt += 1;
 }
 
 int main(int argc, char *argv[])
@@ -270,10 +213,7 @@ int main(int argc, char *argv[])
     //test03();
     //test04();
     //test05();
-    //test06();
-    //test07();
-    //test08();
-    test09();
+    test06();
 
     system("pause");
     return EXIT_SUCCESS;
