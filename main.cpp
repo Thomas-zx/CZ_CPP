@@ -1,151 +1,112 @@
 #include <iostream>
+#include <vector>
+#include <string>
 #include <deque>
 #include <algorithm>
+#include <ctime>
 
 using namespace std;
 
-//deque容器  双端数组  没有容量
 /*
-deque构造函数
-deque<T> deqT;//默认构造形式
-deque(beg, end);//构造函数将[beg, end)区间中的元素拷贝给本身。
-deque(n, elem);//构造函数将n个elem拷贝给本身。
-deque(const deque &deq);//拷贝构造函数。
-
-3.3.3.2 deque赋值操作
-assign(beg, end);//将[beg, end)区间中的数据拷贝赋值给本身。
-assign(n, elem);//将n个elem拷贝赋值给本身。
-deque& operator=(const deque &deq); //重载等号操作符
-swap(deq);// 将deq与本身的元素互换
-
-3.3.3.3 deque大小操作
-deque.size();//返回容器中元素的个数
-deque.empty();//判断容器是否为空
-deque.resize(num);//重新指定容器的长度为num,若容器变长，则以默认值填充新位置。如果容器变短，则末尾超出容器长度的元素被删除。
-deque.resize(num, elem); //重新指定容器的长度为num,若容器变长，则以elem值填充新位置,如果容器变短，则末尾超出容器长度的元素被删除。
+有5名选手：选手ABCDE，10个评委分别对每一名选手打分，去除最高分，去除评委中最低分，取平均分。
+//1. 创建五名选手，放到vector中
+//2. 遍历vector容器，取出来每一个选手，执行for循环，可以把10个评分打分存到deque容器中
+//3. sort算法对deque容器中分数排序，pop_back pop_front去除最高和最低分
+//4. deque容器遍历一遍，累加分数，累加分数/d.size()
+//5. person.score = 平均分
 */
 
-void printDeque(const deque<int> &d)
+class Person
 {
-    //iterator 普通迭代器  reverse_iterator 逆序迭代器  const_iterator 只读迭代器
-    for (deque<int>::const_iterator it = d.begin(); it != d.end(); it++) {
-        //*it = 100000;
-        cout << *it << " ";
-    }
-    cout << endl;
-}
-
-void test01()
-{
-    deque<int>d;
-
-    d.push_back(10);
-    d.push_back(40);
-    d.push_back(30);
-    d.push_back(20);
-    printDeque(d);
-
-    deque<int>d2(d.begin(), d.end());
-    d2.push_back(10000);
-    printDeque(d2);
-
-    //交换
-    d.swap(d2);
-    printDeque(d);
-    printDeque(d2);
-
-    // d2 10 40 30 20
-    if (d2.empty())
+public:
+    Person(string name, int score)
     {
-        cout << "为空" << endl;
+        this->m_Name = name;
+        this->m_Socre = score;
     }
-    else
+
+    string m_Name; //人名
+    int m_Socre; //分数 平均分
+};
+
+void createPerson( vector<Person>&v)
+{
+    string nameSeed = "ABCDE";
+
+    for (int i = 0; i < 5;i++)
     {
-        cout << "不为空 大小为：" << d2.size() << endl;
+        string name = "选手";
+        name += nameSeed[i];
+
+        int score = 0;
+        Person p(name, score);
+
+        v.push_back(p);
     }
 }
 
-/*
-deque双端插入和删除操作
-push_back(elem);//在容器尾部添加一个数据
-push_front(elem);//在容器头部插入一个数据
-pop_back();//删除容器最后一个数据
-pop_front();//删除容器第一个数据
-
-3.3.3.5 deque数据存取
-at(idx);//返回索引idx所指的数据，如果idx越界，抛出out_of_range。
-operator[];//返回索引idx所指的数据，如果idx越界，不抛出异常，直接出错。
-front();//返回第一个数据。
-back();//返回最后一个数据
-3.3.3.6 deque插入操作
-insert(pos,elem);//在pos位置插入一个elem元素的拷贝，返回新数据的位置。
-insert(pos,n,elem);//在pos位置插入n个elem数据，无返回值。
-insert(pos,beg,end);//在pos位置插入[beg,end)区间的数据，无返回值。
-3.3.3.7 deque删除操作
-clear();//移除容器的所有数据
-erase(beg,end);//删除[beg,end)区间的数据，返回下一个数据的位置。
-erase(pos);//删除pos位置的数据，返回下一个数据的位置。
-*/
-
-void test02()
+void setScore(vector<Person>&v)
 {
-    deque<int> d;
+    for (vector<Person>::iterator it = v.begin(); it != v.end();it++)
+    {
+        //对5个人进行打分
+        deque<int>d;
+        for (int i = 0; i < 10; i++)
+        {
+            int score = rand() % 41 + 60; //60 ~ 100
+            d.push_back(score);
+        }
 
-    d.push_back(10);
-    d.push_back(30);
-    d.push_back(20);
-    d.push_front(100);
-    d.push_front(200);
+        //先看下打分
+        //for (deque<int>::iterator dit = d.begin(); dit != d.end();dit++)
+        //{
+        //	cout << *dit << " ";
+        //}
+        //cout << endl;
 
-    printDeque(d); // 200 100 10 30 20
+        //排序 从小到大
+        sort(d.begin(), d.end());
 
-    //删除 头删 尾删
-    d.pop_back();
-    printDeque(d); // 200 100 10 30
-    d.pop_front();
-    printDeque(d); // 100 10 30
+        //去除 最高 和 最低
+        d.pop_back(); //最高
+        d.pop_front();
 
-    //插入
-    deque<int>d2;
-    d2.push_back(50);
-    d2.push_back(60);
-    d2.insert(d2.begin(), d.begin(), d.end());
-    printDeque(d2);  //  100 10 30 50 60
+        int sum = 0;//总分
+        for (deque<int>::iterator dit = d.begin(); dit != d.end(); dit++)
+        {
+            sum += *dit;
+        }
+
+        //平均分
+        int avg = sum / d.size();
+        it->m_Socre = avg;
+    }
 }
 
-//排序规则
-bool myCompare(int v1, int v2)
+void showSocre(vector<Person> &v)
 {
-    return v1 > v2; // 100 10
+    for (vector<Person>::iterator it = v.begin(); it != v.end(); it++)
+    {
+        cout << "姓名：" << it->m_Name << " 最终平均分为： " << it->m_Socre << endl;
+    }
 }
 
-//排序 sort
-void test03()
+int main()
 {
-    deque<int>d;
+    //设置随机数种子
+    srand((unsigned int)time(NULL));
 
-    d.push_back(5);
-    d.push_back(15);
-    d.push_back(3);
-    d.push_back(40);
-    d.push_back(7);
+    //创建容器 存放 选手
+    vector<Person>v;
 
-    printDeque(d);
-    //排序
-    sort(d.begin(), d.end());
+    //创建5名选手
+    createPerson(v);
 
-    printDeque(d);
+    //打分
+    setScore(v);
 
-    //从大到小
-    sort(d.begin(), d.end(), myCompare);
-    printDeque(d);
-}
-
-int main(int argc, char *argv[])
-{
-    //test01();
-    //test02();
-    test03();
+    //展示平均分
+    showSocre(v);
 
     system("pause");
     return EXIT_SUCCESS;
