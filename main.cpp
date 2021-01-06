@@ -1,52 +1,44 @@
 #include <iostream>
+#include <string>
+//系统提供标准异常 要包含头文件
+#include <stdexcept>
+
 using namespace std;
 
-//异常基类
-class BaseException
+class Person
 {
 public:
-    virtual void printError()
+    Person(string name, int age)
     {
-    }
-};
+        this->m_Name = name;
+        //年龄做检测
+        if (age < 0 || age > 200)
+        {
+            //抛出越界异常
+            //throw out_of_range("年龄越界了！");
 
-class NullPointerException:public BaseException
-{
-public:
-    virtual void printError()
-    {
-        cout << "空指针异常" << endl;
-    }
-};
-
-class OutofRangeException:public BaseException
-{
-public:
-    virtual void printError()
-    {
-        cout << "越界异常" << endl;
+            throw length_error("长度越界");
+        }
     }
 
+    string m_Name;
+    int m_Age;
 };
-
-void doWork()
-{
-    //throw NullPointerException();
-
-    throw OutofRangeException();
-}
 
 void test01()
 {
     try
     {
-        doWork();
+        Person p("张三",300);
     }
-    catch (BaseException & e)
+    catch (out_of_range & e)
     {
-        e.printError();
+        cout << e.what() << endl;
     }
-
+    catch (length_error & e)
+    {
+        cout << e.what() << endl;
+    }
 }
 
 int main()

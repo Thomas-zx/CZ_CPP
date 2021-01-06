@@ -35,9 +35,8 @@ public:
 void doWork()
 {
     //throw new MyException();  //2.需要手动释放
-    MyException e;
 
-    throw &e;
+    throw MyException(); //3.调用拷贝构造，自动调用析构
 }
 
 void test01()
@@ -46,7 +45,7 @@ void test01()
     {
         doWork();
     }
-    catch (MyException *e) //1.MyException e，会多开销一份数据
+    catch (MyException &e) //1.MyException e，会多开销一份数据
     {
         cout << "捕获异常" << endl;
         //delete e; //靠自觉 释放对象
