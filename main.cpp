@@ -1,9 +1,29 @@
 #include <iostream>
 #include <string>
-//系统提供标准异常 要包含头文件
 #include <stdexcept>
-
 using namespace std;
+
+class MyOutOfRangeException : public exception
+{
+public:
+
+    MyOutOfRangeException(string errorInfo)
+    {
+        this->m_ErrorInfo = errorInfo;
+    }
+
+    virtual  ~MyOutOfRangeException()
+    {
+
+    }
+    virtual const char* what() const _NOEXCEPT
+    {
+        //返回 错误信息
+        //string 转 char *  .c_str()
+        return this->m_ErrorInfo.c_str();
+    }
+    string m_ErrorInfo;
+};
 
 class Person
 {
@@ -14,13 +34,9 @@ public:
         //年龄做检测
         if (age < 0 || age > 200)
         {
-            //抛出越界异常
-            //throw out_of_range("年龄越界了！");
-
-            throw length_error("长度越界");
+            throw MyOutOfRangeException( string("我自己的年龄越界异常"));
         }
     }
-
     string m_Name;
     int m_Age;
 };
@@ -29,13 +45,9 @@ void test01()
 {
     try
     {
-        Person p("张三",300);
+        Person p("张三", 300);
     }
-    catch (out_of_range & e)
-    {
-        cout << e.what() << endl;
-    }
-    catch (length_error & e)
+    catch (MyOutOfRangeException & e)
     {
         cout << e.what() << endl;
     }
