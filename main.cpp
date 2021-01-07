@@ -1,50 +1,46 @@
 #include <iostream>
-#include <string>
-#include <vector>
+
 using namespace std;
 
-//auto可以在声明变量的时候根据变量初始值的类型自动为此变量选择匹配的类型
+//nullptr关键字来代指空指针
+//nullptr为了解决NULL表示空指针在C++中具有二义性的问题
+//C语言中
+// NULL通常被定义为：#define NULL ((void *)0)
+//C++语言中
+// NULL,void*是不能隐式转换成其他类型的指针的
+//#ifdef __cplusplus
+//#define NULL 0
+//#else
+//#define NULL ((void *)0)
+//#endif
 
-void test01()
+void func(void* i)
 {
-    int a = 10;
-    auto au_a = a;  //自动类型推断，au_a为int类型
-    cout << typeid(au_a).name() << endl;
+    cout << "func1" << endl;
 }
 
-//1.用于代替冗长复杂、变量使用范围专一的变量声明
-void test02()
+void func(int i)
 {
-    vector<string> vs;
-    //for (vector<string>::iterator it = vs.begin(); it != vs.end(); it++)
-    for (auto it = vs.begin(); it != vs.end(); it++) {
-        //...
-    }
+    cout << "func2" << endl;
 }
 
-//2.在定义模板函数时，用于声明依赖模板参数的变量类型
-template <typename _Tx, typename _Ty>
-void Multiply(_Tx x, _Ty y)
+int main(int argc,char* argv[])
 {
-    auto v = x * y;
-    std::cout << v;
-}
-
-//3.模板函数依赖于模板参数的返回值
-template <typename _Tx, typename _Ty>
-auto multiply(_Tx x, _Ty y)->decltype(x * y)
-{
-    return x * y;
-}
-//decltype
-//希望从表达式的类型推断出要定义的变量类型
-//但是不想用该表达式的值初始化变量（初始化可以用auto）
-
-
-int main(int argc, char *argv[])
-{
-    test01();
-    //test02();
+    //func(NULL);
+    func(nullptr);
+    getchar();
 
     return 0;
 }
+const class nullptr_t
+{
+public:
+    template <class T>
+    inline operator T*() const {return 0;}
+
+    template <class C, class T>
+    inline operator T C::*() const {return 0;}
+
+private:
+    void operator&() const;
+} _nullptr_ = {};
