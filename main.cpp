@@ -1,155 +1,61 @@
 #include <iostream>
-#include <sstream>
-#include <vector>
-#include <map>
-#include <list>
 
 using namespace std;
 
-//C++迭代器失效
-//一、序列式容器(数组型数据结构)
-//对于序列式容器(如vector,deque)，序列式容器就是数组式容器，
-// 删除当前的iterator会使后面所有元素的iterator都失效
-
-void vectorTest()
+class Test
 {
-    vector<int> container;
-    for (int i = 0; i < 10; i++)
-    {
-        container.push_back(i);
-    }
+public:
+    Test(int i) : data(i) {}
 
-    vector<int>::iterator iter;
-    for (iter = container.begin(); iter != container.end(); iter++)
-    {
-        cout<< "current:" <<*iter << endl;
-        if (*iter > 3) {
-            cout<< "del:" <<*iter << endl;
-            iter = container.erase(iter);  //erase的返回值是删除元素下一个元素的迭代器
-            iter--;
-        }
-    }
+private:
+    int data;
+};
 
-    for (iter = container.begin(); iter != container.end(); iter++)
-    {
-        cout<<*iter<<endl;
-    }
-}
-
-//二、关联式容器(树形数据结构)
-//对于关联容器(如map, set, multimap,multiset)，
-// 删除当前的iterator，仅仅会使当前的iterator失效，
-// 只要在erase时，递增当前iterator即可
-
-//测试错误的Map删除元素
-void mapTest()
+class Test1
 {
-    map<int, string> dataMap;
+public:
+    //【1】显式缺省函数（=default）
+    Test1() = default;  // 显式指定缺省函数
+    Test1(int i) : data(i) {}
+    //【2】显式删除函数（=delete）
+    //需要禁止拷贝构造函数的使用
+    Test1(const Test& t) = delete; // 显式删除拷贝构造函数
 
-    for (int i = 0; i < 10; i++)
-    {
-        string strValue = "Hello, World";
-        stringstream ss;
-        ss<<i;
-        string tmpStrCount;
-        ss>>tmpStrCount;
-        strValue += tmpStrCount;
-        dataMap.insert(make_pair(i, strValue));
-    }
 
-    cout<<"MAP元素内容为："<<endl;
-    map<int, string>::iterator iter;
-    for (iter = dataMap.begin(); iter != dataMap.end(); iter++)
-    {
-        int nKey = iter->first;
-        string strValue = iter->second;
-        cout<<strValue<<endl;
-    }
+private:
+    int data;
+};
 
-    cout<<"内容开始删除："<<endl;
-    //删除操作引发迭代器失效
-    for (iter = dataMap.begin(); iter != dataMap.end();iter++)
-    {
-        int nKey = iter->first;
-        string strValue = iter->second;
-
-        //if (nKey % 2 == 0)
-        //{
-        //    dataMap.erase(iter);    //错误
-        //}
-
-        if (nKey % 2 == 0)
-        {
-            dataMap.erase(iter++);
-            auto a = iter;
-        } else {
-            iter++;
-        }
-    }
-
-    cout<<"MAP元素内容为："<<endl;
-    for (auto iter = dataMap.begin(); iter != dataMap.end(); iter++)
-    {
-        int nKey = iter->first;
-        string strValue = iter->second;
-        cout<<strValue<<endl;
-    }
-}
-
-//三、链表式容器(链表型数据结构)
-//对于链表式容器(如list)，
-// 删除当前的iterator，仅仅会使当前的iterator失效，
-// 这是因为list之类的容器，使用了链表来实现，插入、删除一个结点不会对其他结点造成影响。
-
-void printList(list<int>&L)
+//【3】其他应用
+class Example
 {
-    for (list<int>::iterator it = L.begin(); it != L.end();it++)
-    {
-        cout << *it << " ";
-    }
-    cout << endl;
-}
+public:
+    Example() = default;
+    Example(const Example&);
+    Example(int i) {}
+    Example(char c) = delete;
 
-void listTest()
+private:
+    int data;
+};
+
+Example::Example(const Example& ex) = default;
+
+void func(int i) {}
+void func(char c) = delete;
+
+int main()
 {
-    list<int> myList;
-    for (int i = 0; i < 10; i++) {
-        myList.push_back(i);
-    }
-    printList(myList);
+    //POD全称Plain Old Data。通俗的讲，一个类或结构体通过二进制拷贝后还能保持其数据不变，那么它就是一个POD类型。
+    std::cout << std::is_pod<Test>::value << std::endl;  // 0
+    std::cout << std::is_pod<Test1>::value << std::endl;
 
-    for (auto iter = myList.begin(); iter != myList.end(); iter++)
-    {
-        if (*iter > 3)
-            myList.erase(iter);
-    }
+    Test1 objT1;
+    //Test1 objT2(objT1); // 无法通过编译
 
-    //方式一:递增当前iterator
-    //for (auto iter = myList.begin(); iter != myList.end();)
-    //{
-    //    if (*iter > 3)
-    //        myList.erase(iter++);
-    //    else
-    //        ++iter;
-    //}
+    Example ex(1);
+    //Example ex1('a');  // 无法通过编译
 
-    //方式二:通过erase获得下一个有效的iterator
-    //for (auto iter = myList.begin(); iter != myList.end();)
-    //{
-    //    if (*iter > 3)
-    //        iter = myList.erase(iter);  //erase删除元素，返回下一个迭代器
-    //    else
-    //        ++iter;
-    //}
-
-    printList(myList);
-}
-
-int main(int argc, char *argv[])
-{
-    //vectorTest();
-    //mapTest();
-    listTest();
-
-    return 0;
+    func(1);
+    //func('a');  // 无法通过编译
 }
